@@ -143,12 +143,7 @@ export default {
       selectedBorrow: null,
 
       newBorrow: {
-        user_id: "",
-        book_id: "",
-        quantity: "",
-        start_date: "",
-        end_date: "",
-        status: "dipinjam",
+       
       },
     };
   },

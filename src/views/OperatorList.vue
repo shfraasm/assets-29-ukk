@@ -171,12 +171,7 @@ export default {
       selectedOperator: null,
       showAddModal: false,
       newOp: {
-        name: "",
-        username: "",
-        email: "",
-        roles: 1,
-        password: "",
-        address: "",
+       
       },
     };
   },

@@ -207,7 +207,7 @@ export default {
         { key: "id", label: "NO", sortable: true },
         { key: "name", label: "Nama buku", sortable: true },
         { key: "photo", label: "Cover Buku" },
-        { key: "book_category_name", label: "Genre", sortable: true },
+        { key: "category", label: "Genre", sortable: true },
         { key: "remaining_stock", label: "Stok", sortable: true },
         { key: "actions", label: "AKSI" },
       ],
@@ -215,14 +215,6 @@ export default {
       selectedBook: null,
       showAddModal: false,
       newBook: {
-        name: "",
-        description: "",
-        photo: null,
-        book_category_id: "",
-        remaining_stock: "",
-        author: "",
-        publisher: "",
-        published_year: "",
       },
       user_logged: "",
     };

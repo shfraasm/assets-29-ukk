@@ -240,12 +240,6 @@ export default {
       selectedUser: null,
       showAddModal: false,
       newUser: {
-        name: "",
-        username: "",
-        email: "",
-        roles: 2,
-        password: "",
-        address: "",
       },
       user_logged: "",
     };

@@ -134,6 +134,8 @@ export default {
     bookDetail() {},
 
     fetchRating() {},
+
+    createCollection() {}
   },
 };
 </script>
