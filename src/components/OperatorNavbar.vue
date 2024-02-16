@@ -43,9 +43,6 @@
                           ><b-icon-table></b-icon-table> Data
                           Peminjaman</b-nav-item
                         >
-                        <b-nav-item active to="/categories"
-                          ><b-icon-table></b-icon-table> Data Kategori Buku</b-nav-item
-                        >
                         <b-nav-item active to="/books"
                           ><b-icon-table></b-icon-table> Data Buku</b-nav-item
                         >
