@@ -52,7 +52,11 @@ const router = new VueRouter({
       name: "borrows",
       component: () => import("../views/BorrowList.vue"),
     },
-   
+    {
+      path: "/borrows/print/:id",
+      name: "borrows-print",
+      component: () => import("../views/BorrowPrint.vue"),
+    },
     {
       path: "/users",
       name: "users",
