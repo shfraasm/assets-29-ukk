@@ -10,14 +10,14 @@
         </p>
       </div>
       <div
-        class="text-center text-secondary align-items-center py-5 v-if-col-0"
+        class="text-center text-secondary align-items-center py-5 v-if-col-0" v-if="collections.length == 0"
       >
         <p>
           <b-icon-archive font-scale="5" class="mb-2"></b-icon-archive> <br />
           Anda belum memiliki koleksi
         </p>
       </div>
-      <div class="row v-else">
+      <div class="row v-else" v-else>
         <div class="d-flex justify-content-center my-2">
           <div class="v-for" v-for="(col, index) in collections" :key="index">
             <div class="bg-light p-3 mx-3 rounded-3">
@@ -80,9 +80,13 @@ export default {
   },
 
   methods: {
-    checkUserLogin() {},
+    checkUserLogin() {
+      if (this.user_logged == null) {
+        this.$router.push('/access-denied')
+      }
+    },
 
-    //msh blm benar
+    
     fetchCollection() {
       const userId = localStorage.getItem("user_id");
       const params = {
@@ -106,6 +110,7 @@ export default {
         .then((response) => {
           console.log(response.data);
           this.fetchCollection();
+        
         })
         .catch((error) => {
           console.error(error);

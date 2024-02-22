@@ -59,6 +59,9 @@
                         <h5>
                           <b-icon-person-fill></b-icon-person-fill> Akun saya
                         </h5>
+                        <b-nav-item active to="/profile"
+                          ><b-icon-person></b-icon-person> Profil saya</b-nav-item
+                        >
                         <b-nav-item active to="/bookmark"
                           ><b-icon-bookmark></b-icon-bookmark> Koleksi
                           pribadi</b-nav-item

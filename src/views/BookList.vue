@@ -110,8 +110,7 @@
         <!-- photo -->
         <b-form-file
           v-model="newBook.photo"
-          class="mb-2"
-          drop-placeholder="Drop file here..."
+          class="font-nunito mb-2"
           @change="handleFileChange"
         ></b-form-file>
 
@@ -119,15 +118,19 @@
           <b-form-radio
             v-model="newBook.category"
             :aria-describedby="ariaDescribedby"
-            name="some-radios"
+            name="radio-inline"
+            size="sm"
             value="Fiksi"
+            class="font-nunito"
             >Fiksi</b-form-radio
           >
           <b-form-radio
             v-model="newBook.category"
             :aria-describedby="ariaDescribedby"
-            name="some-radios"
-            class="mb-2"
+            name="radio-inline"
+            class="font-nunito mb-2"
+
+            size="sm"
             value="Nonfiksi"
             >Nonfiksi</b-form-radio
           >
@@ -181,7 +184,6 @@
         </b-form-group>
         <div class="justify-content-between d-flex">
           <b-button
-            type="reset"
             class="button-secondary border-0"
             @click="showAddModal = false"
             >Cancel</b-button
@@ -197,7 +199,7 @@
     <b-modal
       id="modal-1"
       v-model="showEditModal"
-      title="Tambah Buku"
+      title="Edit Buku"
       hide-footer
     >
       <b-form
@@ -299,9 +301,8 @@
             required
           ></b-form-input>
         </b-form-group>
-        <div class="justify-content-between d-flex">
+        <div class="justify-content-between d-flex mt-2">
           <b-button
-            type="reset"
             class="button-secondary border-0"
             @click="showEditModal = false"
             >Cancel</b-button
@@ -329,7 +330,7 @@ export default {
   data() {
     return {
       books: [],
-      role: localStorage.getItem('user_id'),
+      role: localStorage.getItem('user_role'),
       fields: [
         { key: "id", label: "NO", sortable: true },
         { key: "name", label: "Nama buku", sortable: true },
@@ -453,7 +454,7 @@ export default {
       api
         .delete(endpoints.deleteBook(id))
         .then((response) => {
-          this.fetchBooks
+          this.fetchBooks()
         })
         .catch((error) => {
           console.error(error);

@@ -65,22 +65,24 @@
         <div class="row mx-5">
           <div class="col">
             <div class="d-flex flex-wrap justify-content-center my-2">
-              <div class="v-for-book">
+              <div class="v-for-book" v-for="(book, index) in books" :key="index">
                 <div class="bg-light p-3 mx-3 rounded-3 mb-4">
                   <img
-                    src="../assets/buku-hijau.jpeg"
+                    :src="book.photo"
                     style="max-width: 170px; max-height: 220px"
                     class="rounded-3"
                     alt=""
                   />
                   <p style="width: 120px" class="text-start mt-2">
-                    <b>Nama Buku</b>
+                    <b>{{book.name}}</b>
                   </p>
                   <b-button
                     size="sm"
                     class="gradient-btn align-items-start d-flex"
                     style="width: 60px"
-                    :to="{ name: 'detail-book' }"
+                    :to="{ name: 'detail-book', params: {
+                      id: book.id
+                    } }"
                     >Detail</b-button
                   >
                 </div>
@@ -137,6 +139,7 @@
 <script>
 import MainNavbar from "../components/MainNavbar.vue";
 import MainFooterVue from "../components/MainFooter.vue";
+import { endpoints, api } from "../api.js";
 export default {
   components: {
     MainNavbar,
@@ -153,6 +156,7 @@ export default {
 
   mounted() {
     this.checkUserLogin();
+    this.fetchBook()
   },
 
   methods: {
@@ -162,7 +166,17 @@ export default {
       }
     },
 
-    fetchBook() {},
+    fetchBook() {
+      api
+        .get(endpoints.getBooks)
+        .then((response) => {
+          this.books = response.data.data
+        })
+        .catch((error) => {
+          console.error(error);
+          alert("gagal fetch data");
+        });
+    },
   },
 };
 </script>

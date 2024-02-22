@@ -87,6 +87,16 @@ const router = new VueRouter({
 		name: "my-bookmark",
 		component: () => import("../views/CollectionView.vue"),
 	  },
+	{
+		path: "/profile",
+		name: "my-profile",
+		component: () => import("../views/ProfileUser.vue"),
+	  },
+	{
+		path: "/op-profile",
+		name: "op-profile",
+		component: () => import("../views/ProfileOp.vue"),
+	  },
   ],
 });
 

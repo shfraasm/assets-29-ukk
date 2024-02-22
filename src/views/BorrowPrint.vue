@@ -14,24 +14,24 @@
         </div>
         <div class="mx-2 mt-3 justify-content-between d-flex">
           <h6>Peminjaman atas nama:</h6>
-          <p>nama lengkap</p>
+          <p>{{selectedBorrow.user_name}}</p>
         </div>
         <div class="mx-2 justify-content-between d-flex">
           <h6>Nama Buku:</h6>
-          <p>namabuku</p>
+          <p>{{selectedBorrow.book_name}}</p>
         </div>
         <div class="mx-2 justify-content-between d-flex">
           <h6>Jumlah:</h6>
-          <p>8x</p>
+          <p>{{selectedBorrow.quantity}}x</p>
         </div>
         <hr />
         <div class="mx-2 justify-content-between d-flex">
           <h6>Tanggal pinjam:</h6>
-          <p>2020-12-12</p>
+          <p>{{selectedBorrow.start_date}}</p>
         </div>
         <div class="mx-2 justify-content-between d-flex">
           <h6>Tanggal kembali:</h6>
-          <p>2020-12-25</p>
+          <p>{{selectedBorrow.end_date}}</p>
         </div>
         <div class="mx-2 mt-5 justify-content-end d-flex">
           <b-button class="gradient-btn" @click="printBorrow">
@@ -44,6 +44,7 @@
 </template>
 
 <script>
+import { endpoints, api } from "../api.js";
 export default {
   data() {
     return {
@@ -57,12 +58,25 @@ export default {
 
   methods: {
     setDetail(data) {
+      this.selectedBorrow = data.data;
     },
+
     detailBorrow() {
-     
+      const id = this.$route.params.id
+      api
+        .get(endpoints.getBorrowById(id))
+        .then((response) => {
+          this.setDetail(response.data);
+          this.showDetailModal = true;
+        })
+        .catch((error) => {
+          console.error(error);
+          alert("gagal get data");
+        });
     },
 
     printBorrow(){
+      window.print()
     }
   },
 };

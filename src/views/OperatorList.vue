@@ -31,17 +31,17 @@
         <template #cell(actions)="data">
           <div class="my-1">
             <b-button
-              variant="outline-primary"
-              class="m-1 btn-sm"
+              class="m-1 btn-sm outline-primary-custom"
               @click="detailOperator(data.item.id)"
               ><b-icon-eye></b-icon-eye
             ></b-button>
-            <b-button variant="outline-info" class="m-1 btn-sm"
+            <b-button
+              @click="openEditModal(data.item)"
+              class="m-1 btn-sm outline-secondary-custom"
               ><b-icon-pen></b-icon-pen
             ></b-button>
             <b-button
-              variant="outline-danger"
-              class="m-1 btn-sm"
+              class="m-1 btn-sm outline-danger-custom"
               @click="deleteOperator(data.item.id)"
               ><b-icon-trash></b-icon-trash
             ></b-button>
@@ -51,15 +51,12 @@
     </div>
 
     <!-- modal detail -->
-    <b-modal id="modal-1" v-model="showDetailModal" title="Detail Petugas">
+    <b-modal id="modal-1" v-model="showDetailModal" title="Detail petugas">
       <div v-if="selectedOperator">
-        <p><strong>Nama Lengkap:</strong> shafira maudyna</p>
-        <p><strong>Nama Pengguna:</strong> petugas_1</p>
-        <p><strong>Email:</strong> shafira@gmail.com</p>
-        <p>
-          <strong>Alamat:</strong> Lorem ipsum dolor sit amet, consectetur
-          adipisicing.
-        </p>
+        <p><strong>Nama Lengkap:</strong> {{ selectedOperator.name }}</p>
+        <p><strong>Nama Pengguna:</strong> {{ selectedOperator.username }}</p>
+        <p><strong>Email:</strong> {{ selectedOperator.email }}</p>
+        <p><strong>Alamat:</strong> {{ selectedOperator.address }}</p>
       </div>
     </b-modal>
 
@@ -75,32 +72,29 @@
         class="p-3"
         enctype="multipart/form-data"
       >
-        <!-- name -->
         <b-form-group class="mb-2">
           <b-form-input
-            id="input-2"
+            id="input-1"
             placeholder="Masukkan nama lengkap"
+            class="font-nunito"
             v-model="newOp.name"
             required
           ></b-form-input>
         </b-form-group>
 
-        <!-- description -->
         <b-form-group class="mb-2">
           <b-form-input
             id="input-2"
-            placeholder="Masukkan Petugas"
+            placeholder="Masukkan nama pengguna"
             class="font-nunito"
             v-model="newOp.username"
             required
           ></b-form-input>
         </b-form-group>
-
-        <!-- remaining_stok -->
         <b-form-group class="mb-2">
           <b-form-input
             type="email"
-            id="input-2"
+            id="input-3"
             v-model="newOp.email"
             class="font-nunito"
             placeholder="Masukkan email"
@@ -108,10 +102,9 @@
           ></b-form-input>
         </b-form-group>
 
-        <!-- author -->
         <b-form-group class="mb-2">
           <b-form-input
-            id="input-2"
+            id="input-4"
             type="password"
             v-model="newOp.password"
             class="font-nunito"
@@ -120,7 +113,6 @@
           ></b-form-input>
         </b-form-group>
 
-        <!-- publisher -->
         <b-form-group class="mb-2">
           <b-form-textarea
             id="textarea-2"
@@ -130,12 +122,75 @@
             required
           ></b-form-textarea>
         </b-form-group>
-        <!-- published_year -->
         <div class="justify-content-between d-flex pt-2">
           <b-button
-            type="reset"
             class="button-secondary border-0"
             @click="showAddModal = false"
+            >Cancel</b-button
+          >
+          <b-button type="submit" class="button-primary border-0"
+            >Simpan</b-button
+          >
+        </div>
+      </b-form>
+    </b-modal>
+
+    <!-- modal edit -->
+    <b-modal
+      id="modal-1"
+      v-model="showEditModal"
+      title="Edit Petugas"
+      hide-footer
+    >
+      <b-form
+        @submit.prevent="editOperator"
+        class="p-3"
+        enctype="multipart/form-data"
+      >
+        <b-form-group class="mb-2">
+          <b-form-input
+            id="input-1"
+            class="font-nunito"
+            
+            placeholder="Masukkan nama lengkap"
+            v-model="newOp.name"
+            required
+          ></b-form-input>
+        </b-form-group>
+
+        <b-form-group class="mb-2">
+          <b-form-input
+            id="input-2"
+            placeholder="Masukkan nama pengguna"
+            class="font-nunito"
+            v-model="newOp.username"
+            required
+          ></b-form-input>
+        </b-form-group>
+        <b-form-group class="mb-2">
+          <b-form-input
+            type="email"
+            id="input-3"
+            v-model="newOp.email"
+            class="font-nunito"
+            placeholder="Masukkan email"
+            required
+          ></b-form-input>
+        </b-form-group>
+
+        <b-form-group class="mb-2">
+          <b-form-textarea
+            id="textarea-2"
+            v-model="newOp.address"
+            class="font-nunito"
+            placeholder="Masukkan alamat"
+            required
+          ></b-form-textarea>
+        </b-form-group>
+        <div class="justify-content-between d-flex pt-2">
+          <b-button
+            class="button-secondary border-0"
+            @click="showEditModal = false"
             >Cancel</b-button
           >
           <b-button type="submit" class="button-primary border-0"
@@ -151,6 +206,8 @@
   <script>
 import OperatorNavbarVue from "../components/OperatorNavbar.vue";
 import FooterBottom from "../components/FooterBottom.vue";
+import { endpoints, api } from "../api.js";
+
 export default {
   components: {
     FooterBottom,
@@ -158,8 +215,8 @@ export default {
   },
   data() {
     return {
-      role: "",
-      user_logged: "",
+      role: localStorage.getItem("user_role"),
+      user_logged: localStorage.getItem("user_id"),
       operators: [],
       fields: [
         { key: "id", label: "NO", sortable: true },
@@ -168,6 +225,7 @@ export default {
         { key: "actions", label: "AKSI" },
       ],
       showDetailModal: false,
+      showEditModal: false,
       selectedOperator: null,
       showAddModal: false,
       newOp: {
@@ -182,21 +240,104 @@ export default {
   },
 
   methods: {
-    checkUserLogin() {},
-    checkRole() {},
+    checkUserLogin() {
+      if (this.user_logged == null) {
+        this.$router.push("/access-denied");
+      }
+    },
+    checkRole() {
+      if (this.role == 2) {
+        this.$router.push("/access-denied");
+      }
+    },
 
     // fetch data
-    setOperators(data) {},
-    fetchOperators() {},
+    setOperators(data) {
+      this.operators = data.data
+    },
+    fetchOperators() {
+      api
+        .get(endpoints.getUser1)
+        .then((response) => {
+          this.setOperators(response.data);
+        })
+        .catch((error) => {
+          console.error(error);
+          alert("gagal fetch data");
+        });
+    },
 
     // detail data
-    setDetail(data) {},
-    detailOperator(id) {},
+    setDetail(data) {
+      this.selectedOperator = data.data
+    },
+    detailOperator(id) {
+      api
+        .get(endpoints.getUserById(id))
+        .then((response) => {
+          this.setDetail(response.data);
+          this.showDetailModal = true;
+        })
+        .catch((error) => {
+          console.error(error);
+          alert("gagal get data");
+        });
+    },
 
-    addOperator() {},
+    addOperator() {
+      let formData = new FormData();
+      for (let key in this.newOp) {
+        formData.append(key, this.newOp[key]);
+      }
+      api
+        .post(endpoints.addUser1, formData)
+        .then((response) => {
+          console.log(response.data);
+          this.fetchOperators();
+          this.showAddModal = false;
+        })
+        .catch((error) => {
+          console.error(error);
+          alert("gagal add data");
+        });
+    },
+
+    openEditModal(op){
+      this.newOp = {...op}
+      this.showEditModal = true
+    },
+
+    editOperator() {
+      let formData = new FormData();
+      for (let key in this.newOp) {
+        formData.append(key, this.newOp[key]);
+      }
+      formData.append("_method", "PUT")
+      api
+        .post(endpoints.editUser(this.newOp.id), formData)
+        .then((response) => {
+          console.log(response.data);
+          this.fetchOperators();
+          this.showEditModal = false;
+        })
+        .catch((error) => {
+          console.error(error);
+          alert("gagal edit data");
+        });
+    },
 
     // hapus data
-    deleteOperator(id) {},
+    deleteOperator(id) {
+      api
+        .delete(endpoints.deleteUser(id))
+        .then((response) => {
+          this.fetchOperators();
+        })
+        .catch((error) => {
+          console.error(error);
+          alert("gagal delete data");
+        });
+    },
   },
 };
 </script>

@@ -53,13 +53,10 @@
     <!-- modal detail -->
     <b-modal id="modal-1" v-model="showDetailModal" title="Detail pengguna">
       <div v-if="selectedUser">
-        <p><strong>Nama Lengkap:</strong> shafira maudyna</p>
-        <p><strong>Nama Pengguna:</strong> peminjam_1</p>
-        <p><strong>Email:</strong> shafira@gmail.com</p>
-        <p>
-          <strong>Alamat:</strong> Lorem ipsum dolor sit amet consectetur
-          adipisicing.
-        </p>
+        <p><strong>Nama Lengkap:</strong> {{ selectedUser.name }}</p>
+        <p><strong>Nama Pengguna:</strong> {{ selectedUser.username }}</p>
+        <p><strong>Email:</strong> {{ selectedUser.email }}</p>
+        <p><strong>Alamat:</strong> {{ selectedUser.address }}</p>
       </div>
     </b-modal>
 
@@ -134,7 +131,6 @@
         <!-- published_year -->
         <div class="justify-content-between d-flex pt-2">
           <b-button
-            type="reset"
             class="button-secondary border-0"
             @click="showAddModal = false"
             >Cancel</b-button
@@ -221,6 +217,7 @@
   <script>
 import OperatorNavbarVue from "../components/OperatorNavbar.vue";
 import FooterBottom from "../components/FooterBottom.vue";
+import { endpoints, api } from "../api.js";
 export default {
   components: {
     FooterBottom,
@@ -228,7 +225,8 @@ export default {
   },
   data() {
     return {
-      role: "",
+      role: localStorage.getItem("user_role"),
+      user_logged: localStorage.getItem("user_id"),
       users: [],
       fields: [
         { key: "id", label: "NO", sortable: true },
@@ -239,9 +237,8 @@ export default {
       showDetailModal: false,
       selectedUser: null,
       showAddModal: false,
-      newUser: {
-      },
-      user_logged: "",
+      showEditModal: false,
+      newUser: {},
     };
   },
   mounted() {
@@ -251,27 +248,103 @@ export default {
   },
 
   methods: {
-    checkUserLogin() {},
-    checkRole() {},
+    checkUserLogin() {
+      if (this.user_logged == null) {
+        this.$router.push("/access-denied");
+      }
+    },
+    checkRole() {
+      if (this.role == 2) {
+        this.$router.push("/access-denied");
+      }
+    },
     // fetch data
-    setUsers(data) {},
-    fetchUsers() {},
+    setUsers(data) {
+      this.users = data.data;
+    },
+    fetchUsers() {
+      api
+        .get(endpoints.getUser2)
+        .then((response) => {
+          this.setUsers(response.data);
+        })
+        .catch((error) => {
+          console.error(error);
+          alert("gagal fetch data");
+        });
+    },
 
     // detail data
-    setDetail(data) {},
-    detailUser(id) {},
+    setDetail(data) {
+      this.selectedUser = data.data;
+    },
+    detailUser(id) {
+      api
+        .get(endpoints.getUserById(id))
+        .then((response) => {
+          this.setDetail(response.data);
+          this.showDetailModal = true;
+        })
+        .catch((error) => {
+          console.error(error);
+          alert("gagal get data");
+        });
+    },
 
-    addUser() {},
+    addUser() {
+      let formData = new FormData();
+      for (let key in this.newUser) {
+        formData.append(key, this.newUser[key]);
+      }
+      api
+        .post(endpoints.addUser2, formData)
+        .then((response) => {
+          console.log(response.data);
+          this.fetchUsers();
+          this.showAddModal = false;
+        })
+        .catch((error) => {
+          console.error(error);
+          alert("gagal add data");
+        });
+    },
 
     openEditModal(user) {
       this.newUser = { ...user };
       this.showEditModal = true;
     },
 
-    editUser() {},
+    editUser() {
+      let formData = new FormData();
+      for (let key in this.newUser) {
+        formData.append(key, this.newUser[key]);
+      }
+      formData.append("_method", "PUT");
+      api
+        .post(endpoints.editUser(this.newUser.id), formData)
+        .then((response) => {
+          console.log(response.data);
+          this.fetchUsers();
+          this.showEditModal = false;
+        })
+        .catch((error) => {
+          console.error(error);
+          alert("gagal edit data");
+        });
+    },
 
     // hapus data
-    deleteUser(id) {},
+    deleteUser(id) {
+      api
+        .delete(endpoints.deleteUser(id))
+        .then((response) => {
+          this.fetchUsers();
+        })
+        .catch((error) => {
+          console.error(error);
+          alert("gagal delete data");
+        });
+    },
   },
 };
 </script>

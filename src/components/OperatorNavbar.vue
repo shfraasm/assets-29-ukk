@@ -38,11 +38,19 @@
                   <nav class="mb-3 mx-3">
                     <b-nav vertical>
                       <b-nav vertical class="sidebar-menu">
+                        <h5>
+                          <b-icon-person-fill></b-icon-person-fill> Akun saya
+                        </h5>
+                        <b-nav-item active to="/op-profile"
+                          ><b-icon-person></b-icon-person> Profil saya</b-nav-item
+                        >
+                        <br>
                         <h5><b-icon-braces></b-icon-braces> Master data</h5>
                         <b-nav-item active to="/borrows"
                           ><b-icon-table></b-icon-table> Data
                           Peminjaman</b-nav-item
                         >
+                        
                         <b-nav-item active to="/books"
                           ><b-icon-table></b-icon-table> Data Buku</b-nav-item
                         >
@@ -53,7 +61,7 @@
                         <b-nav-item
                           active
                           to="/operators"
-                          v-if="user_role === 0"
+                          v-if="user_role === '0'"
                           ><b-icon-table></b-icon-table> Data
                           Petugas</b-nav-item
                         >

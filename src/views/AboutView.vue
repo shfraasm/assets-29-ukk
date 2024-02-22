@@ -58,5 +58,27 @@ export default {
     MainNavbar,
     MainFooterVue,
   },
+  
+  data() {
+    return {
+      books: [],
+      user_logged: localStorage.getItem("user_id")
+
+    };
+  },
+
+  mounted() {
+    this.checkUserLogin();
+  },
+
+  methods: {
+    checkUserLogin() {
+      if (this.user_logged == null) {
+        this.$router.push('/access-denied')
+      }
+    },
+
+    fetchBook() {},
+  },
 };
 </script>

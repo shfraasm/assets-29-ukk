@@ -84,12 +84,13 @@
                           </p>
                           <div class="card">
                             <p class="text-black pt-2 px-2">
-                              {{ rate.description }} (<b-icon-star-fill
+                              {{ rate.description }}   (<b-icon-star-fill
                                 variant="warning"
                               ></b-icon-star-fill>
                               {{ rate.star }})
                             </p>
                           </div>
+                          <b-button class="outline-danger-custom btn-sm mt-2" v-if="rate.user_id == user_logged" @click="deleteRating(rate.id)"><b-icon-trash></b-icon-trash></b-button>
                         </div>
                       </div>
                     </div>
@@ -143,7 +144,7 @@ export default {
 
   methods: {
     checkUserLogin() {
-      if (this.user_logged == 0) {
+      if (this.user_logged == null) {
         this.$router.push('/access-denied')
       }
     },
@@ -173,6 +174,18 @@ export default {
           this.ratings = response.data.data.filter(
             (rating) => rating.book_id === bookId
           );
+        })
+        .catch((error) => {
+          console.error(error);
+          alert('gagal get rating')
+        });
+    },
+
+    deleteRating(id) {
+      api
+        .delete(endpoints.destroyRating(id))
+        .then((response) => {
+          this.fetchRating()
         })
         .catch((error) => {
           console.error(error);

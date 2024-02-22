@@ -75,7 +75,7 @@ export default {
           localStorage.setItem("user_id", response.data.user.id);
           localStorage.setItem("user_name", response.data.user.name);
           localStorage.setItem("username", response.data.user.username);
-          localStorage.setItem("roles", role);
+          localStorage.setItem("user_role", role);
           localStorage.setItem("token", token);
           
           if (role == 0) {
