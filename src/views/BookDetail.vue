@@ -1,15 +1,15 @@
 <template>
   <div class="background-tc-2">
     <MainNavbar />
-    <div class="container m-5" style="margin-left: 120px !important; ">
+    <div class="container m-5" style="margin-left: 250px !important">
       <div class="row justify-content-center d-flex align-items-center">
         <div class="col-8">
-          <b-card class="v-if-select">
+          <b-card class="v-if-select" v-if="selectedBook">
             <div class="container p-4">
               <div class="row">
                 <div class="col-4 p-2">
                   <img
-                    src="../assets/buku-hijau.jpeg"
+                    :src="selectedBook.photo"
                     width="100%"
                     class="rounded-3"
                   />
@@ -18,9 +18,9 @@
                 <div class="col-8 px-3">
                   <div class="h2-style mt-1 justify-content-between d-flex">
                     <h3>
-                      <b>Nama Buku</b>
+                      <b>{{ selectedBook.name }}</b>
                     </h3>
-                    <b-button class="gradient-btn btn-sm"
+                    <b-button class="gradient-btn btn-sm" @click="createCollection"
                       ><b-icon-bookmark-fill></b-icon-bookmark-fill
                     ></b-button>
                   </div>
@@ -29,15 +29,23 @@
                       <p>
                         <strong>Rating: </strong
                         ><b-icon-star-fill variant="warning"></b-icon-star-fill>
-                        3.5
+                        {{ selectedBook.total_rating }}
                       </p>
-                      <p><strong>Genre: </strong>Nonfiksi</p>
                       <p>
-                        <strong>Sinopsis: </strong>Lorem ipsum dolor sit amet.
+                        <strong>Kategori: </strong>{{ selectedBook.category }}
                       </p>
-                      <p><strong>Penulis: </strong>Shafira</p>
-                      <p><strong>Penerbit: </strong>Gramedia</p>
-                      <p><strong>Tahun Rilis: </strong>2023</p>
+                      <p>
+                        <strong>Sinopsis: </strong
+                        >{{ selectedBook.description }}
+                      </p>
+                      <p><strong>Penulis: </strong>{{ selectedBook.author }}</p>
+                      <p>
+                        <strong>Penerbit: </strong>{{ selectedBook.publisher }}
+                      </p>
+                      <p>
+                        <strong>Tahun Rilis: </strong
+                        >{{ selectedBook.published_year }}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -54,29 +62,32 @@
           <b-card class="my-5">
             <div class="container p-4">
               <div class="row">
-                <div class="v-if-rating-0">
+                <div class="v-if-rating-0" v-if="ratings.length == 0">
                   <div class="text-center py-3">
                     <p>Buatlah ulasan pertamamu disini!</p>
                   </div>
                 </div>
-                <div class="v-else col-8">
+                <div class="v-else col-8" v-else>
                   <div class="h2-style mt-1 justify-content-start d-flex">
                     <h4><strong>Ulasan buku ini</strong></h4>
                   </div>
                   <div class="mt-3">
                     <div class="font-size-p">
-                      <div class="v-for-rate">
+                      <div
+                        class="v-for-rate"
+                        v-for="(rate, index) in ratings"
+                        :key="index"
+                      >
                         <div class="mb-3">
                           <p>
-                            <strong>username: </strong>
+                            <strong>{{ rate.user_name }}: </strong>
                           </p>
                           <div class="card">
                             <p class="text-black pt-2 px-2">
-                              Lorem, ipsum dolor sit amet consectetur
-                              adipisicing. (<b-icon-star-fill
+                              {{ rate.description }} (<b-icon-star-fill
                                 variant="warning"
                               ></b-icon-star-fill>
-                              4)
+                              {{ rate.star }})
                             </p>
                           </div>
                         </div>
@@ -90,6 +101,9 @@
                     style="width: 100px"
                     :to="{
                       name: 'rating-book',
+                      params:{
+                        id: selectedBook.id
+                      }
                     }"
                     >Beri Ulasan</b-button
                   >
@@ -100,23 +114,24 @@
         </div>
       </div>
     </div>
-    <MainFooter/>
+    <MainFooter />
   </div>
 </template>
 
 <script>
 import MainNavbar from "../components/MainNavbar.vue";
 import MainFooter from "../components/MainFooter.vue";
+import { endpoints, api } from "../api.js";
 export default {
   components: {
     MainNavbar,
-    MainFooter
+    MainFooter,
   },
   data() {
     return {
       selectedBook: null,
       ratings: [],
-      user_logged: "",
+      user_logged: localStorage.getItem('user_id'),
     };
   },
 
@@ -127,15 +142,62 @@ export default {
   },
 
   methods: {
-    checkUserLogin() {},
+    checkUserLogin() {
+      if (this.user_logged == 0) {
+        this.$router.push('/access-denied')
+      }
+    },
 
-    setDetail(data) {},
+    setDetail(data) {
+      this.selectedBook = data.data;
+    },
+    bookDetail() {
+      const bookId = this.$route.params.id;
+      api
+        .get(endpoints.getBookById(bookId))
+        .then((response) => {
+          console.log(response);
+          this.setDetail(response.data);
+        })
+        .catch((error) => {
+          console.error(error);
+          alert("gagal get data");
+        });
+    },
 
-    bookDetail() {},
+    fetchRating() {
+      const bookId = this.$route.params.id;
+      api
+        .get(endpoints.getRatings)
+        .then((response) => {
+          this.ratings = response.data.data.filter(
+            (rating) => rating.book_id === bookId
+          );
+        })
+        .catch((error) => {
+          console.error(error);
+          alert('gagal get rating')
+        });
+    },
 
-    fetchRating() {},
-
-    createCollection() {}
+    createCollection() {
+      const userId = localStorage.getItem('user_id')
+      const addCollect = {
+        user_id: userId,
+        book_id: this.selectedBook.id
+      }
+      api
+        .post(endpoints.addCollection, addCollect)
+        .then((response) => {
+          if (response.status == 200) {
+            alert('berhasil tesimpan di koleksi anda')
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          alert('gagal add koleksi')
+        });
+    },
   },
 };
 </script>

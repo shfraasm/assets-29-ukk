@@ -1,19 +1,19 @@
 <template>
   <div class="background-tc-2">
     <MainNavbar />
-    <div class="container m-5">
+    <div class="container m-5" style="margin-left: 250px !important">
       <div class="row justify-content-center d-flex align-items-center">
         <div class="col-8">
           <b-card>
             <div class="container p-4">
               <div class="row">
                 <div class="col-4 p-3">
-                  <img src="../assets/buku-hijau.jpeg" width="100%" />
+                  <img :src="selectedBook.photo" width="100%" />
                 </div>
                 <div class="col-8">
                   <div class="h2-style mt-1">
                     <h3>
-                      <b>Nama Buku</b>
+                      <b>{{ selectedBook.name }}</b>
                     </h3>
                   </div>
                   <b-form class="pt-2" @submit.prevent="createRating">
@@ -38,6 +38,9 @@
                         class="btn-sm button-primary"
                         :to="{
                           name: 'detail-book',
+                          params: {
+                            id: selectedBook.id
+                          }
                         }"
                         ><b-icon-arrow-left></b-icon-arrow-left>
                         Kembali</b-button
@@ -62,6 +65,7 @@
   
   <script>
 import MainNavbar from "../components/MainNavbar.vue";
+import { endpoints, api } from "../api.js";
 export default {
   components: {
     MainNavbar,
@@ -71,7 +75,7 @@ export default {
       selectedBook: null,
       description: "",
       star: 0,
-      user_logged: "",
+      user_logged: localStorage.getItem('user_id'),
     };
   },
 
@@ -81,11 +85,48 @@ export default {
   },
 
   methods: {
-    checkUserLogin() {},
-    setDetail(data) {},
-    bookDetail() {},
+    checkUserLogin() {
+      if (this.user_logged == null) {
+        this.$router.push('/access-denied')
+      }
+    },
 
-    createRating() {},
+    setDetail(data) {
+      this.selectedBook = data.data;
+    },
+    bookDetail() {
+      const bookId = this.$route.params.id;
+      api
+        .get(endpoints.getBookById(bookId))
+        .then((response) => {
+          console.log(response);
+          this.setDetail(response.data);
+        })
+        .catch((error) => {
+          console.error(error);
+          alert("gagal get data");
+        });
+    },
+
+    createRating() {
+      const bookId = this.$route.params.id;
+      const ratingData = {
+        user_id: this.user_logged,
+        book_id: bookId,
+        description: this.description,
+        star: this.star
+      }
+      api
+        .post(endpoints.addRatings, ratingData)
+        .then((response) => {
+         alert('berhasil menambah ulasan')
+         this.$router.push('/booklist')
+        })
+        .catch((error) => {
+          console.error(error);
+          alert('gagal tambah rating')
+        });
+    },
   },
 };
 </script>

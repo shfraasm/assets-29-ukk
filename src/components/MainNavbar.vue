@@ -33,7 +33,7 @@
         <div class="col-4 justify-content-end d-flex">
           <!-- Right aligned nav items -->
           <b-navbar-nav class="ml-auto">
-            <h6 class="navbar-font mt-2">username</h6>
+            <h6 class="navbar-font mt-2">{{username}}</h6>
             <b-avatar
               variant="primary"
               class="text-white bg-tosca mx-2"
@@ -57,13 +57,13 @@
                       <b-nav vertical class="sidebar-menu">
                         <!-- h5 brubah -->
                         <h5>
-                        <b-icon-person-fill></b-icon-person-fill> Akun saya
-                      </h5>
+                          <b-icon-person-fill></b-icon-person-fill> Akun saya
+                        </h5>
                         <b-nav-item active to="/bookmark"
-                        ><b-icon-bookmark></b-icon-bookmark> Koleksi
-                        pribadi</b-nav-item
-                      >
-                     
+                          ><b-icon-bookmark></b-icon-bookmark> Koleksi
+                          pribadi</b-nav-item
+                        >
+
                         <br />
                         <!-- h5 brubah -->
                         <h5><b-icon-gear></b-icon-gear> Pengaturan</h5>
@@ -88,7 +88,10 @@
         <b-button class="btn-close" @click="showLogoutModal = false"></b-button>
       </div>
       <div class="text-center align-items-center pt-3 pb-4">
-        <b-icon-exclamation-circle font-scale="5.5" class="text-danger"></b-icon-exclamation-circle>
+        <b-icon-exclamation-circle
+          font-scale="5.5"
+          class="text-danger"
+        ></b-icon-exclamation-circle>
         <h5
           class="mt-4 text-black"
           style="font-family: 'Nunito', sans-serif !important"
@@ -123,12 +126,17 @@ export default {
 
   methods: {
     logoutUser() {
+      localStorage.removeItem("user_id");
+      localStorage.removeItem("user_name");
+      localStorage.removeItem("username");
+      localStorage.removeItem("roles");
+      localStorage.removeItem("token");
       this.$router.push("/");
     },
   },
 
   mounted() {
-    this.username = "";
+    this.username = localStorage.getItem("username")
   },
 };
 </script>

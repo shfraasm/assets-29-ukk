@@ -2,9 +2,11 @@
   <div class="background-tc">
     <div class="row d-flex justify-content-center align-items-center">
       <div class="col-5 bg-white text-center vh-100">
-        <h1 class="navbar-font logo-login"><div class="align-items-center mt-3">
-              <img src="@/assets/logo-3.png" alt="" style="width: 270px" />
-            </div></h1>
+        <h1 class="navbar-font logo-login">
+          <div class="align-items-center mt-3">
+            <img src="@/assets/logo-3.png" alt="" style="width: 270px" />
+          </div>
+        </h1>
       </div>
       <div class="col-7 px-2 my-4">
         <div class="container">
@@ -49,6 +51,7 @@
 </template>
 
 <script>
+import { endpoints, api } from "../api.js";
 export default {
   data() {
     return {
@@ -58,7 +61,37 @@ export default {
   },
   methods: {
     loginUser() {
-    }
+      const loginData = {
+        email: this.email,
+        password: this.password,
+      };
+
+      api
+        .post(endpoints.login, loginData)
+        .then((response) => {
+          let role = response.data.user.roles;
+          const token = response.data.token;
+
+          localStorage.setItem("user_id", response.data.user.id);
+          localStorage.setItem("user_name", response.data.user.name);
+          localStorage.setItem("username", response.data.user.username);
+          localStorage.setItem("roles", role);
+          localStorage.setItem("token", token);
+          
+          if (role == 0) {
+            this.$router.push("/dashboard-admin");
+          } else if (role == 1) {
+            this.$router.push("/dashboard-operator");
+          } else if (role == 2) {
+            this.$router.push("/dashboard");
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          alert("Gagal login, tidak valid");
+        });
+
+    },
   },
 };
 </script>

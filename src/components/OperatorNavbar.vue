@@ -18,7 +18,7 @@
         <div class="col-4 justify-content-end d-flex">
           <!-- Right aligned nav items -->
           <b-navbar-nav class="ml-auto">
-            <h6 class="navbar-font mt-2">username</h6>
+            <h6 class="navbar-font mt-2">{{username}}</h6>
             <b-avatar
               variant="primary"
               class="text-white bg-tosca mx-2"
@@ -53,7 +53,7 @@
                         <b-nav-item
                           active
                           to="/operators"
-                          v-if="user_role === '0'"
+                          v-if="user_role === 0"
                           ><b-icon-table></b-icon-table> Data
                           Petugas</b-nav-item
                         >
@@ -107,20 +107,24 @@ export default {
   data() {
     return {
       username: "",
-      user_role: 0,
+      user_role:  localStorage.getItem("user_role"),
       showLogoutModal: false,
     };
   },
 
   methods: {
     logoutUser() {
-
+      localStorage.removeItem("user_id");
+      localStorage.removeItem("user_name");
+      localStorage.removeItem("username");
+      localStorage.removeItem("roles");
+      localStorage.removeItem("token");
+      this.$router.push("/");
     },
-    
   },
 
   mounted() {
-    this.username = "";
+    this.username = localStorage.getItem("username");;
   },
 };
 </script>

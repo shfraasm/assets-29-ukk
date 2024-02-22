@@ -146,15 +146,22 @@ export default {
   data() {
     return {
       books: [],
-      user_logged: ''
+      user_logged: localStorage.getItem("user_id")
 
     };
   },
 
-  mounted() {},
+  mounted() {
+    this.checkUserLogin();
+  },
 
   methods: {
-    checkUserLogin() {},
+    checkUserLogin() {
+      if (this.user_logged == null) {
+        this.$router.push('/access-denied')
+      }
+    },
+
     fetchBook() {},
   },
 };

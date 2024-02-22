@@ -44,7 +44,9 @@
               @click="detailBook(data.item.id)"
               ><b-icon-eye></b-icon-eye
             ></b-button>
-            <b-button class="m-1 btn-sm outline-secondary-custom"
+            <b-button
+              class="m-1 btn-sm outline-secondary-custom"
+              @click="openEditModal(data.item)"
               ><b-icon-pen></b-icon-pen
             ></b-button>
             <b-button
@@ -60,17 +62,14 @@
     <!-- modal detail -->
     <b-modal id="modal-1" v-model="showDetailModal" title="Detail Buku">
       <div v-if="selectedBook">
-        <p><strong>Nama:</strong> nama buku</p>
-        <p>
-          <strong>Sinopsis:</strong> Lorem ipsum dolor sit amet consectetur
-          adipisicing elit. Reiciendis, expedita?
-        </p>
-        <p><strong>Rating:</strong> 4.6</p>
-        <p><strong>Stok:</strong> 20</p>
-        <p><strong>Genre:</strong> nonfiksi</p>
-        <p><strong>Penulis:</strong> shafira</p>
-        <p><strong>Penerbit:</strong> Gramedia</p>
-        <p><strong>Tahun Rilis:</strong> 2023</p>
+        <p><strong>Nama:</strong> {{ selectedBook.name }}</p>
+        <p><strong>Sinopsis:</strong> {{ selectedBook.description }}</p>
+        <p><strong>Rating:</strong> {{ selectedBook.total_rating }}</p>
+        <p><strong>Stok:</strong> {{ selectedBook.remaining_stock }}</p>
+        <p><strong>Genre:</strong> {{ selectedBook.category }}</p>
+        <p><strong>Penulis:</strong> {{ selectedBook.author }}</p>
+        <p><strong>Penerbit:</strong> {{ selectedBook.publisher }}</p>
+        <p><strong>Tahun Rilis:</strong> {{ selectedBook.published_year }}</p>
       </div>
     </b-modal>
 
@@ -108,17 +107,6 @@
           ></b-form-textarea>
         </b-form-group>
 
-        <!-- book_category_id -->
-        <b-form-group class="mb-2">
-          <b-form-input
-            id="input-2"
-            placeholder="Masukkan genre"
-            v-model="newBook.book_category_id"
-            class="font-nunito"
-            required
-          ></b-form-input>
-        </b-form-group>
-
         <!-- photo -->
         <b-form-file
           v-model="newBook.photo"
@@ -126,6 +114,24 @@
           drop-placeholder="Drop file here..."
           @change="handleFileChange"
         ></b-form-file>
+
+        <b-form-group v-slot="{ ariaDescribedby }">
+          <b-form-radio
+            v-model="newBook.category"
+            :aria-describedby="ariaDescribedby"
+            name="some-radios"
+            value="Fiksi"
+            >Fiksi</b-form-radio
+          >
+          <b-form-radio
+            v-model="newBook.category"
+            :aria-describedby="ariaDescribedby"
+            name="some-radios"
+            class="mb-2"
+            value="Nonfiksi"
+            >Nonfiksi</b-form-radio
+          >
+        </b-form-group>
 
         <!-- remaining_stok -->
         <b-form-group class="mb-2">
@@ -186,6 +192,126 @@
         </div>
       </b-form>
     </b-modal>
+
+    <!-- modal edit -->
+    <b-modal
+      id="modal-1"
+      v-model="showEditModal"
+      title="Tambah Buku"
+      hide-footer
+    >
+      <b-form
+        @submit.prevent="editBook"
+        class="p-3"
+        enctype="multipart/form-data"
+      >
+        <!-- name -->
+        <b-form-group class="mb-2">
+          <b-form-input
+            id="input-2"
+            placeholder="Masukkan nama buku"
+            v-model="newBook.name"
+            class="font-nunito"
+            required
+          ></b-form-input>
+        </b-form-group>
+
+        <!-- description -->
+        <b-form-group class="mb-2">
+          <b-form-textarea
+            id="input-2"
+            placeholder="Masukkan sinopsis"
+            v-model="newBook.description"
+            class="font-nunito"
+            required
+          ></b-form-textarea>
+        </b-form-group>
+
+        <!-- photo -->
+        <b-form-file
+          v-model="newBook.photo"
+          class="mb-2"
+          drop-placeholder="Drop file here..."
+          @change="handleFileChange"
+        ></b-form-file>
+
+        <b-form-group v-slot="{ ariaDescribedby }">
+          <b-form-radio
+            v-model="newBook.category"
+            :aria-describedby="ariaDescribedby"
+            name="some-radios"
+            value="Fiksi"
+            >Fiksi</b-form-radio
+          >
+          <b-form-radio
+            v-model="newBook.category"
+            :aria-describedby="ariaDescribedby"
+            name="some-radios"
+            class="mb-2"
+            value="Nonfiksi"
+            >Nonfiksi</b-form-radio
+          >
+        </b-form-group>
+
+        <!-- remaining_stok -->
+        <b-form-group class="mb-2">
+          <b-form-input
+            type="number"
+            id="input-2"
+            v-model="newBook.remaining_stock"
+            class="font-nunito"
+            placeholder="Masukkan jumlah stok"
+            required
+          ></b-form-input>
+        </b-form-group>
+
+        <!-- author -->
+        <b-form-group class="mb-2">
+          <b-form-input
+            id="input-2"
+            v-model="newBook.author"
+            class="font-nunito"
+            placeholder="Masukkan nama penulis"
+            required
+          ></b-form-input>
+        </b-form-group>
+
+        <!-- publisher -->
+        <b-form-group class="mb-2">
+          <b-form-input
+            id="input-2"
+            v-model="newBook.publisher"
+            class="font-nunito"
+            placeholder="Masukkan nama penerbit"
+            required
+          ></b-form-input>
+        </b-form-group>
+        <!-- published_year -->
+        <b-form-group class="mb-2">
+          <b-form-input
+            id="input-2"
+            v-model="newBook.published_year"
+            class="font-nunito"
+            placeholder="Masukkan tahun rilis"
+            type="number"
+            min="1990"
+            max="2024"
+            required
+          ></b-form-input>
+        </b-form-group>
+        <div class="justify-content-between d-flex">
+          <b-button
+            type="reset"
+            class="button-secondary border-0"
+            @click="showEditModal = false"
+            >Cancel</b-button
+          >
+          <b-button type="submit" class="button-primary border-0"
+            >Simpan</b-button
+          >
+        </div>
+      </b-form>
+    </b-modal>
     <div class="mt-5"></div>
     <FooterBottom />
   </div>
@@ -194,6 +320,7 @@
   <script>
 import OperatorNavbarVue from "../components/OperatorNavbar.vue";
 import FooterBottom from "../components/FooterBottom.vue";
+import { endpoints, api } from "../api.js";
 export default {
   components: {
     FooterBottom,
@@ -202,21 +329,21 @@ export default {
   data() {
     return {
       books: [],
-      role: "",
+      role: localStorage.getItem('user_id'),
       fields: [
         { key: "id", label: "NO", sortable: true },
         { key: "name", label: "Nama buku", sortable: true },
         { key: "photo", label: "Cover Buku" },
-        { key: "category", label: "Genre", sortable: true },
+        { key: "category", label: "Kategori", sortable: true },
         { key: "remaining_stock", label: "Stok", sortable: true },
         { key: "actions", label: "AKSI" },
       ],
       showDetailModal: false,
       selectedBook: null,
       showAddModal: false,
-      newBook: {
-      },
-      user_logged: "",
+      showEditModal: false,
+      newBook: {},
+      user_logged: localStorage.getItem('user_id'),
     };
   },
   mounted() {
@@ -226,25 +353,113 @@ export default {
   },
 
   methods: {
-    checkUserLogin() {},
+    checkUserLogin() {
+      if (this.user_logged == null) {
+        this.$router.push('/access-denied')
+      }
+    },
 
-    checkRole() {},
-    
+    checkRole() {
+      if (this.role == 2) {
+        this.$router.push('/access-denied')
+      }
+    },
+
     // fetch data
-    setBooks(data) {},
-    fetchBooks() {},
+    setBooks(data) {
+      this.books = data.data;
+    },
+    fetchBooks() {
+      api
+        .get(endpoints.getBooks)
+        .then((response) => {
+          this.setBooks(response.data);
+        })
+        .catch((error) => {
+          console.error(error);
+          alert("gagal fetch data");
+        });
+    },
 
     // detail data
-    setDetail(data) {},
-    detailBook(id) {},
+    setDetail(data) {
+      this.selectedBook = data.data;
+    },
+    detailBook(id) {
+      api
+        .get(endpoints.getBookById(id))
+        .then((response) => {
+          console.log(response);
+          this.setDetail(response.data);
+          this.showDetailModal = true;
+        })
+        .catch((error) => {
+          console.error(error);
+          alert("gagal fetch data");
+        });
+    },
 
     // tambah data
-    handleFileChange(event) {},
+    handleFileChange(event) {
+      const selectedFile = event.target.files[0];
+      this.newBook.photo = selectedFile;
+    },
 
-    addBook() {},
+    addBook() {
+      let formData = new FormData();
+      for (let key in this.newBook) {
+        formData.append(key, this.newBook[key]);
+      }
+      api
+        .post(endpoints.addBook, formData)
+        .then((response) => {
+          console.log(response.data);
+          this.fetchBooks();
+          this.showAddModal = false;
+        })
+        .catch((error) => {
+          console.error(error);
+          alert("gagal fetch data");
+        });
+    },
+
+    openEditModal(book) {
+      this.newBook = { ...book };
+      this.showEditModal = true;
+    },
+
+    editBook() {
+      let formData = new FormData();
+      for (let key in this.newBook) {
+        formData.append(key, this.newBook[key]);
+      }
+
+      formData.append("_method", "PUT");
+      api
+        .post(endpoints.editBook(this.newBook.id), formData)
+        .then((response) => {
+          console.log(response.data);
+          this.fetchBooks()
+          this.showEditModal = false;
+        })
+        .catch((error) => {
+          console.error(error);
+          alert("gagal fetch data");
+        });
+    },
 
     // hapus data
-    deleteBook(id) {},
+    deleteBook(id) {
+      api
+        .delete(endpoints.deleteBook(id))
+        .then((response) => {
+          this.fetchBooks
+        })
+        .catch((error) => {
+          console.error(error);
+          alert("gagal delete data");
+        });
+    },
   },
 };
 </script>

@@ -73,8 +73,8 @@ export default {
 
   data() {
     return {
-      role: "",
-      user_logged: "",
+      role: localStorage.getItem("user_role"),
+      user_logged: localStorage.getItem("user_id")
     };
   },
 
@@ -84,8 +84,16 @@ export default {
   },
 
   methods: {
-    checkUserLogin() {},
-    checkRole() {},
+    checkUserLogin() {
+      if (this.user_logged == null) {
+        this.$router.push('/access-denied')
+      }
+    },
+    checkRole() {
+      if (this.role == 2) {
+        this.$router.push('/access-denied')
+      }
+    },
   },
 };
 </script>
