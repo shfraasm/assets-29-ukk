@@ -99,7 +99,7 @@
     </div>
 
     <!-- modal detail -->
-    <b-modal id="modal-1" v-model="showDetailModal" title="Detail Buku">
+    <b-modal id="modal-1" v-model="showDetailModal" title="Detail Buku" hide-header-close>
       <div v-if="selectedBook">
         <p><strong>Nama:</strong> {{ selectedBook.name }}</p>
         <p><strong>Sinopsis:</strong> {{ selectedBook.description }}</p>
@@ -118,6 +118,7 @@
       v-model="showAddModal"
       title="Tambah Buku"
       hide-footer
+      hide-header-close
     >
       <b-form
         @submit.prevent="addBook"

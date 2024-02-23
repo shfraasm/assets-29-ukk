@@ -106,6 +106,7 @@
       v-model="showAddModal"
       title="Tambah Petugas"
       hide-footer
+      hide-header-close
     >
       <b-form
         @submit.prevent="addOperator"

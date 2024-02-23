@@ -91,7 +91,7 @@
     </div>
 
     <!-- modal detail -->
-    <b-modal id="modal-1" v-model="showDetailModal" title="Detail pengguna">
+    <b-modal id="modal-1" v-model="showDetailModal" title="Detail pengguna" hide-header-close>
       <div v-if="selectedUser">
         <p><strong>Nama Lengkap:</strong> {{ selectedUser.name }}</p>
         <p><strong>Nama Pengguna:</strong> {{ selectedUser.username }}</p>
@@ -105,6 +105,7 @@
       id="modal-1"
       v-model="showAddModal"
       title="Tambah Pengguna"
+      hide-header-close
       hide-footer
     >
       <b-form
@@ -187,6 +188,7 @@
       id="modal-1"
       v-model="showEditModal"
       title="Edit Pengguna"
+      hide-header-close
       hide-footer
     >
       <b-form
