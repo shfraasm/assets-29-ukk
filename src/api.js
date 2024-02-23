@@ -6,6 +6,7 @@ const endpoints = {
   register: `${ApiUrl}/register`,
   searchUser: `${ApiUrl}/search-users`,
   searchOp: `${ApiUrl}/search-operators`,
+  searchAdmin: `${ApiUrl}/search-admins`,
   
   profile: `${ApiUrl}/profile`,
   getUser2: `${ApiUrl}/users-peminjam`,
@@ -13,6 +14,9 @@ const endpoints = {
 
   getUser1: `${ApiUrl}/users-petugas`,
   addUser1: `${ApiUrl}/operators`,
+
+  getUser0: `${ApiUrl}/users-admin`,
+  addUser0: `${ApiUrl}/admins`,
 
   getUserById: (id) =>  `${ApiUrl}/users/${id}`,
   editUser: (id) =>  `${ApiUrl}/users/${id}`,
@@ -32,6 +36,8 @@ const endpoints = {
   getCollections: `${ApiUrl}/collections`,
   addCollection: `${ApiUrl}/collections`,
   deleteCollection: (id) => `${ApiUrl}/collections/${id}`,
+  hasCollection: `${ApiUrl}/has-collection`,
+  deleteCollectionByUser: `${ApiUrl}/collections-delete`,
 
   getBorrows: `${ApiUrl}/borrowings`,
   searchBorrow: `${ApiUrl}/search-borrows`,

@@ -64,6 +64,13 @@
                           ><b-icon-table></b-icon-table> Data
                           Petugas</b-nav-item
                         >
+                        <b-nav-item
+                          active
+                          to="/admins"
+                          v-if="user_role === '0'"
+                          ><b-icon-table></b-icon-table> Data
+                          Admin</b-nav-item
+                        >
                         <br />
                         <h5><b-icon-gear></b-icon-gear> Pengaturan</h5>
                         <b-nav-item active @click="showLogoutModal = true"

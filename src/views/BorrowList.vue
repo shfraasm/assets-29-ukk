@@ -1,5 +1,8 @@
 <template>
-  <div class="pb-5 vh-100" style="background-color: #dcf2f1">
+  <div
+    class="pb-5 vh-100"
+    style="background-color: #dcf2f1; height: fit-content !important"
+  >
     <operatorNavbarVue />
     <div class="container my-5">
       <div class="p-3 alert-custom rounded-3 mb-3">
@@ -16,24 +19,27 @@
       </div>
 
       <div class="justify-content-end d-flex">
-        <b-input-group class="mb-2">
-          <b-form-input
-            class="font-nunito mb-2"
-            prepend="cari"
-            style="max-width: 300px"
-            placeholder="Masukkan Kata Kunci"
-            v-model="keyword"
-            @input="searchBorrow(keyword)"
-          ></b-form-input>
-          <b-input-group-append>
-            <b-button
-              class="gradient-btn border-0"
-              style="border-bottom-left-radius: 0%; border-top-left-radius: 0%"
-            >
-              <b-icon icon="search" />
-            </b-button>
-          </b-input-group-append>
-        </b-input-group>
+        <div class="">
+
+          <b-input-group class="mb-2">
+            <b-form-input
+              class="font-nunito mb-2"
+              prepend="cari"
+              style="max-width: 300px"
+              placeholder="Masukkan Kata Kunci"
+              v-model="keyword"
+              @input="searchBorrow(keyword)"
+            ></b-form-input>
+            <b-input-group-append>
+              <b-button
+                class="gradient-btn border-0"
+                style="border-bottom-left-radius: 0%; border-top-left-radius: 0%"
+              >
+                <b-icon icon="search" />
+              </b-button>
+            </b-input-group-append>
+          </b-input-group>
+        </div>
       </div>
 
       <b-table
@@ -42,6 +48,8 @@
         label-sort-clear=""
         hover
         bordered
+        :per-page="perPage"
+      :current-page="currentPage"
         class="custom-table"
         :items="borrows"
         :fields="fields"
@@ -67,6 +75,7 @@
               ><b-icon-eye></b-icon-eye
             ></b-button> -->
             <b-button
+            v-if="data.item.status == 'Dipinjam'"
               class="m-1 btn-sm outline-primary-custom"
               :to="{
                 name: 'borrows-print',
@@ -102,7 +111,7 @@
         </template>
       </b-table>
       <b-pagination
-        align="fill"
+        align="center"
         v-model="currentPage"
         :total-rows="borrows.length"
         :per-page="perPage"
@@ -158,46 +167,60 @@
       hide-footer
       hide-header-close
     >
-      <b-form @submit.prevent="addBorrow">
-        <!-- <b-form-group class="mb-2"> -->
-        <b-form-select
+      <b-form @submit.prevent="addBorrow" class="mx-3">
+        <!-- name -->
+        <label for="" class="font-nunito mb-2" style="font-size: 15px"
+          >Pilih nama peminjam</label
+        >
+        <select
+          style="font-size: 15px"
+          class="form-select mb-3 font-nunito"
           v-model="newBorrow.user_id"
-          :options="users"
-          value-field="id"
-          text-field="name"
-          size="sm"
-          class="font-nunito mt-3"
-        ></b-form-select>
-        <!-- </b-form-group> -->
-        <b-form-group class="mb-2">
-          <b-form-select
-            v-model="newBorrow.book_id"
-            :options="books"
-            value-field="id"
-            text-field="name"
-            class="font-nunito"
-          ></b-form-select>
-        </b-form-group>
-
-        <!-- select -->
-        <select class="form-select" aria-label="Default select example">
-          <option selected>Open this select menu</option>
-          <option value="1">One</option>
-          <option value="2">Two</option>
-          <option value="3">Three</option>
+          aria-label="Default select example"
+          placeholder="Pilih nama peminjam"
+        >
+          <option selected>Pilih nama peminjam</option>
+          <option v-for="user in users" :value="user.id">
+            {{ user.name }}
+          </option>
         </select>
 
-        <b-form-group class="mb-2">
+        <!-- book -->
+        <label for="" class="font-nunito mb-2" style="font-size: 15px"
+          >Pilih buku</label
+        >
+        <select
+          class="form-select mb-3 font-nunito"
+          style="font-size: 15px"
+          v-model="newBorrow.book_id"
+          aria-label="Default select example"
+          placeholder="Pilih nama peminjam"
+        >
+          <option selected>Pilih buku</option>
+          <option v-for="book in books" :value="book.id">
+            {{ book.name }}
+          </option>
+        </select>
+
+        <!-- quantity -->
+        <b-form-group
+          class="font-nunito mb-2"
+          label="Jumlah"
+          style="font-size: 15px"
+        >
           <b-form-input
             type="number"
             min="1"
             max="10"
             v-model="newBorrow.quantity"
-            placeholder="Jumlah Buku"
             required
           ></b-form-input>
         </b-form-group>
-        <b-form-group class="font-nunito mb-2" label="Tanggal pinjam">
+        <b-form-group
+          class="font-nunito mb-2"
+          label="Tanggal pinjam"
+          style="font-size: 15px"
+        >
           <b-form-input
             placeholder="Jumlah Buku"
             type="date"
@@ -205,7 +228,12 @@
             required
           ></b-form-input>
         </b-form-group>
-        <b-form-group class="font-nunito mb-2" label="Tanggal kembali">
+
+        <b-form-group
+          class="font-nunito mb-"
+          label="Tanggal kembali"
+          style="font-size: 15px"
+        >
           <b-form-input
             placeholder="Jumlah Buku"
             type="date"
@@ -232,62 +260,91 @@
       v-model="showEditModal"
       title="Edit Peminjaman"
       hide-footer
+      hide-header-close
     >
-      <b-form @submit.prevent="editBorrow">
-        <b-form-group class="mb-2">
-          <b-form-select
-            v-model="newBorrow.user_id"
-            :options="users"
-            value-field="id"
-            text-field="name"
-            size="sm"
-            class="mt-3"
-          ></b-form-select>
-        </b-form-group>
-        <b-form-group class="mb-2">
-          <b-form-select
-            v-model="newBorrow.book_id"
-            :options="books"
-            value-field="id"
-            text-field="name"
-          ></b-form-select>
-        </b-form-group>
-        <b-form-group class="mb-2">
+      <b-form @submit.prevent="editBorrow" class="mx-3">
+        <label for="" class="font-nunito mb-2" style="font-size: 15px"
+          >Pilih nama peminjam</label
+        >
+        <select
+          class="form-select mb-3 font-nunito"
+          v-model="newBorrow.user_id"
+          aria-label="Default select example"
+          style="font-size: 15px"
+        >
+          <option v-for="user in users" :value="user.id">
+            {{ user.name }}
+          </option>
+        </select>
+
+
+        <label for="" class="font-nunito mb-2" style="font-size: 15px"
+          >Pilih buku</label
+        >
+        <select
+          class="form-select mb-3 font-nunito"
+          v-model="newBorrow.book_id"
+          aria-label="Default select example"
+          style="font-size: 15px"
+        >
+          <option v-for="book in books" :value="book.id">
+            {{ book.name }}
+          </option>
+        </select>
+        <b-form-group class="mb-2 font-nunito" label="Jumlah" style="font-size: 15px">
           <b-form-input
+            style="font-size: 15px"
             type="number"
+            class="font-nunito"
             min="1"
             max="10"
             v-model="newBorrow.quantity"
-            placeholder="Jumlah Buku"
+            
             required
           ></b-form-input>
         </b-form-group>
-        <b-form-group class="mb-2" label="Tanggal pinjam">
+        <b-form-group
+          class="font-nunito mb-2 mt-3"
+          label="Tanggal pinjam"
+          style="font-size: 15px"
+        >
           <b-form-input
             type="date"
+            class="font-nunito"
             v-model="newBorrow.start_date"
             placeholder="Jumlah Buku"
             required
           ></b-form-input>
         </b-form-group>
-        <b-form-group class="mb-2" label="Tanggal kembali">
+        <b-form-group
+          class="font-nunito mb-2 mt-3"
+          label="Tanggal kembali"
+          style="font-size: 15px"
+        >
           <b-form-input
             type="date"
+            class="font-nunito"
             v-model="newBorrow.end_date"
             placeholder="Jumlah Buku"
             required
           ></b-form-input>
         </b-form-group>
 
-        <b-form-group v-slot="{ ariaDescribedby }" class="mt-2">
+        <b-form-group
+          v-slot="{ ariaDescribedby }"
+          class="mt-3"
+          style="font-size: 15px"
+        >
           <b-form-radio
             v-model="newBorrow.status"
             :aria-describedby="ariaDescribedby"
             name="some-radios"
+            class="font-nunito"
             value="Dipinjam"
             >Dipinjam</b-form-radio
           >
           <b-form-radio
+            class="font-nunito"
             v-model="newBorrow.status"
             :aria-describedby="ariaDescribedby"
             name="some-radios"
@@ -360,7 +417,7 @@ export default {
       users: [],
       books: [],
       keyword: "",
-      perPage: 5,
+      perPage: 3,
       currentPage: 3,
       showDetailModal: false,
       showAddModal: false,

@@ -1,5 +1,5 @@
 <template>
-  <div class="background-tc-2">
+  <div class="background-tc-2" style="height: fit-content;">
     <MainNavbar />
     <div class="my-5">
       <div class="text-center">
@@ -17,7 +17,7 @@
           Anda belum memiliki koleksi
         </p>
       </div>
-      <div class="row v-else" v-else>
+      <div class="row v-else pb-3" v-else>
         <div class="d-flex justify-content-center my-2">
           <div class="v-for" v-for="(col, index) in collections" :key="index">
             <div class="bg-white p-3 mx-3 rounded-3">
@@ -48,7 +48,7 @@
                 @click="deleteCollection(col.id)"
                 v-b-popover.hover.bottomleft="'Menghapus buku ini dari koleksi anda'"
                       title="Hapus"
-                ><b-icon-bookmark-fill></b-icon-bookmark-fill
+                ><b-icon-bookmark-dash></b-icon-bookmark-dash
               ></b-button>
              
             </div>

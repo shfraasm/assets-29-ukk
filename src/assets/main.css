@@ -271,7 +271,6 @@ h5 {
 .about-page {
   background-color: #dcf2f1;
   min-height: calc(100vh - 65px); /* 65px is the height of the navbar */
-  padding-bottom: 100px; /* For footer space */
 }
 
 .about-page h2 {

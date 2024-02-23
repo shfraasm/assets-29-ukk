@@ -35,6 +35,21 @@
                     <div class="">
                       <b-button
                         class="btn-sm button-primary border-0"
+                        v-if="selectedUser.roles == 0"
+                        to="/admins"
+                        ><b-icon-arrow-left></b-icon-arrow-left>
+                        Kembali</b-button
+                      >
+                      <b-button
+                        class="btn-sm button-primary border-0"
+                        v-if="selectedUser.roles == 1"
+                        to="/operators"
+                        ><b-icon-arrow-left></b-icon-arrow-left>
+                        Kembali</b-button
+                      >
+                      <b-button
+                        class="btn-sm button-primary border-0"
+                        v-if="selectedUser.roles == 2"
                         to="/users"
                         ><b-icon-arrow-left></b-icon-arrow-left>
                         Kembali</b-button

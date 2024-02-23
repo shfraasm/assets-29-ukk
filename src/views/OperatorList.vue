@@ -15,24 +15,29 @@
         </div>
       </div>
       <div class="justify-content-end d-flex">
-        <b-input-group class="mb-2">
-          <b-form-input
-            class="font-nunito mb-2"
-            prepend="cari"
-            style="max-width: 300px"
-            placeholder="Masukkan Kata Kunci"
-            v-model="keyword"
-            @input="searchOperator(keyword)"
-          ></b-form-input>
-          <b-input-group-append>
-            <b-button
-              class="gradient-btn border-0"
-              style="border-bottom-left-radius: 0%; border-top-left-radius: 0%"
-            >
-              <b-icon icon="search" />
-            </b-button>
-          </b-input-group-append>
-        </b-input-group>
+        <div class="">
+          <b-input-group class="mb-2">
+            <b-form-input
+              class="font-nunito mb-2"
+              prepend="cari"
+              style="max-width: 300px"
+              placeholder="Masukkan Kata Kunci"
+              v-model="keyword"
+              @input="searchOperator(keyword)"
+            ></b-form-input>
+            <b-input-group-append>
+              <b-button
+                class="gradient-btn border-0"
+                style="
+                  border-bottom-left-radius: 0%;
+                  border-top-left-radius: 0%;
+                "
+              >
+                <b-icon icon="search" />
+              </b-button>
+            </b-input-group-append>
+          </b-input-group>
+        </div>
       </div>
       <b-table
         bordered
@@ -62,8 +67,8 @@
               :to="{
                 name: 'detail-user',
                 params: {
-                  id: data.item.id
-                }
+                  id: data.item.id,
+                },
               }"
               ><b-icon-eye></b-icon-eye
             ></b-button>
@@ -82,7 +87,7 @@
       </b-table>
 
       <b-pagination
-        align="fill"
+        align="center"
         v-model="currentPage"
         :total-rows="operators.length"
         :per-page="perPage"
@@ -112,8 +117,9 @@
         @submit.prevent="addOperator"
         class="p-3"
         enctype="multipart/form-data"
+        style="font-size: 15px"
       >
-        <b-form-group class="mb-2">
+        <b-form-group class="font-nunito mb-3" label="Nama lengkap">
           <b-form-input
             id="input-1"
             placeholder="Masukkan nama lengkap"
@@ -123,7 +129,7 @@
           ></b-form-input>
         </b-form-group>
 
-        <b-form-group class="mb-2">
+        <b-form-group class="font-nunito mb-3" label="Nama pengguna">
           <b-form-input
             id="input-2"
             placeholder="Masukkan nama pengguna"
@@ -132,7 +138,7 @@
             required
           ></b-form-input>
         </b-form-group>
-        <b-form-group class="mb-2">
+        <b-form-group class="font-nunito mb-3" label="Email">
           <b-form-input
             type="email"
             id="input-3"
@@ -143,18 +149,18 @@
           ></b-form-input>
         </b-form-group>
 
-        <b-form-group class="mb-2">
+        <b-form-group class="font-nunito mb-3" label="Kata sandi">
           <b-form-input
             id="input-4"
             type="password"
             v-model="newOp.password"
             class="font-nunito"
-            placeholder="Masukkan password"
+            placeholder="Masukkan kata sandi"
             required
           ></b-form-input>
         </b-form-group>
 
-        <b-form-group class="mb-2">
+        <b-form-group class="font-nunito mb-3" label="Alamat">
           <b-form-textarea
             id="textarea-2"
             v-model="newOp.address"
@@ -182,23 +188,24 @@
       v-model="showEditModal"
       title="Edit Petugas"
       hide-footer
+      hide-header-close
     >
       <b-form
         @submit.prevent="editOperator"
         class="p-3"
         enctype="multipart/form-data"
       >
-        <b-form-group class="mb-2">
+        <b-form-group class="font-nunito mb-3" label="Nama lengkap">
           <b-form-input
             id="input-1"
-            class="font-nunito"
             placeholder="Masukkan nama lengkap"
+            class="font-nunito"
             v-model="newOp.name"
             required
           ></b-form-input>
         </b-form-group>
 
-        <b-form-group class="mb-2">
+        <b-form-group class="font-nunito mb-3" label="Nama pengguna">
           <b-form-input
             id="input-2"
             placeholder="Masukkan nama pengguna"
@@ -207,7 +214,7 @@
             required
           ></b-form-input>
         </b-form-group>
-        <b-form-group class="mb-2">
+        <b-form-group class="font-nunito mb-3" label="Email">
           <b-form-input
             type="email"
             id="input-3"
@@ -218,7 +225,7 @@
           ></b-form-input>
         </b-form-group>
 
-        <b-form-group class="mb-2">
+        <b-form-group class="font-nunito mb-3" label="Alamat">
           <b-form-textarea
             id="textarea-2"
             v-model="newOp.address"

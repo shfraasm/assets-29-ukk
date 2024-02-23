@@ -13,7 +13,6 @@
                     width="100%"
                     class="rounded-3"
                   />
-                  <!-- <img src="../assets/buku-hijau.jpeg" width="100%" class="rounded-3" /> -->
                 </div>
                 <div class="col-8 px-3">
                   <div class="h2-style mt-1 justify-content-between d-flex">
@@ -22,11 +21,23 @@
                     </h3>
                     <b-button
                       class="gradient-btn btn-sm font-nunito"
-                      v-b-popover.hover.bottomleft="'Simpan buku ini di koleksi anda'"
+                      v-b-popover.hover.bottomleft="
+                        'Simpan buku ini di koleksi anda'
+                      "
                       title="Simpan"
                       @click="createCollection"
-                      v-if="role == '2'"
+                      v-if="role == '2' && isBookmark == false"
                       ><b-icon-bookmark-fill></b-icon-bookmark-fill
+                    ></b-button>
+                    <b-button
+                      class="gradient-btn btn-sm font-nunito"
+                      @click="deleteCollection"
+                      v-b-popover.hover.bottomleft="
+                        'Menghapus buku ini dari koleksi anda'
+                      "
+                      title="Hapus"
+                      v-if="role == '2' && isBookmark == true"
+                      ><b-icon-bookmark-check></b-icon-bookmark-check
                     ></b-button>
                   </div>
                   <div class="mt-3">
@@ -78,10 +89,10 @@
               <div class="row">
                 <div class="v-if-rating-0" v-if="ratings.length == 0">
                   <div class="text-center py-3">
-                    <p>Buatlah ulasan pertamamu disini!</p>
+                    <p>Buku ini belum memiliki ulasan.</p>
                   </div>
                 </div>
-                <div class="v-else col-8" v-else>
+                <div v-else>
                   <div class="h2-style mt-1 justify-content-start d-flex">
                     <h4><strong>Ulasan buku ini</strong></h4>
                   </div>
@@ -93,30 +104,128 @@
                         :key="index"
                       >
                         <div class="mb-3">
-                          <p>
-                            <strong>{{ rate.user_name }}: </strong>
-                          </p>
-                          <div class="card">
-                            <p class="text-black pt-2 px-2">
-                              {{ rate.description }} (<b-icon-star-fill
-                                variant="warning"
-                              ></b-icon-star-fill>
-                              {{ rate.star }})
+                          <div class="justify-content-between d-flex">
+                            <p style="margin: 0 !important">
+                              <strong>{{ rate.user_name }} </strong>
                             </p>
                           </div>
-                          <div class="justify-content-between d-flex">
+                          <div class="justify-content-start d-flex">
+                            <div class="star">
+                              <div v-if="rate.star == 2">
+                                <b-icon-star-fill
+                                  font-scale="0.9"
+                                  variant="warning"
+                                ></b-icon-star-fill>
+                              </div>
+                              <div v-if="rate.star == 2">
+                                <b-icon-star-fill
+                                  font-scale="0.9"
+                                  variant="warning"
+                                ></b-icon-star-fill>
+                                <b-icon-star-fill
+                                  font-scale="0.9"
+                                  variant="warning"
+                                ></b-icon-star-fill>
+                                <b-icon-star-fill
+                                  font-scale="0.9"
+                                  variant="secondary"
+                                ></b-icon-star-fill>
+                                <b-icon-star-fill
+                                  font-scale="0.9"
+                                  variant="secondary"
+                                ></b-icon-star-fill>
+                                <b-icon-star-fill
+                                  font-scale="0.9"
+                                  variant="secondary"
+                                ></b-icon-star-fill>
+                              </div>
+                              <div v-if="rate.star == 3">
+                                <b-icon-star-fill
+                                  font-scale="0.9"
+                                  variant="warning"
+                                ></b-icon-star-fill>
+                                <b-icon-star-fill
+                                  font-scale="0.9"
+                                  variant="warning"
+                                ></b-icon-star-fill>
+                                <b-icon-star-fill
+                                  font-scale="0.9"
+                                  variant="warning"
+                                ></b-icon-star-fill>
+                                <b-icon-star-fill
+                                  font-scale="0.9"
+                                  variant="secondary"
+                                ></b-icon-star-fill>
+                                <b-icon-star-fill
+                                  font-scale="0.9"
+                                  variant="secondary"
+                                ></b-icon-star-fill>
+                              </div>
+                              <div v-if="rate.star == 4">
+                                <b-icon-star-fill
+                                  font-scale="0.9"
+                                  variant="warning"
+                                ></b-icon-star-fill>
+                                <b-icon-star-fill
+                                  font-scale="0.9"
+                                  variant="warning"
+                                ></b-icon-star-fill>
+                                <b-icon-star-fill
+                                  font-scale="0.9"
+                                  variant="warning"
+                                ></b-icon-star-fill>
+                                <b-icon-star-fill
+                                  font-scale="0.9"
+                                  variant="warning"
+                                ></b-icon-star-fill>
+                                <b-icon-star-fill
+                                  font-scale="0.9"
+                                  variant="secondary"
+                                ></b-icon-star-fill>
+                              </div>
+                              <div v-if="rate.star == 5">
+                                <b-icon-star-fill
+                                  font-scale="0.9"
+                                  variant="warning"
+                                ></b-icon-star-fill>
+                                <b-icon-star-fill
+                                  font-scale="0.9"
+                                  variant="warning"
+                                ></b-icon-star-fill>
+                                <b-icon-star-fill
+                                  font-scale="0.9"
+                                  variant="warning"
+                                ></b-icon-star-fill>
+                                <b-icon-star-fill
+                                  font-scale="0.9"
+                                  variant="warning"
+                                ></b-icon-star-fill>
+                                <b-icon-star-fill
+                                  font-scale="0.9"
+                                  variant="warning"
+                                ></b-icon-star-fill>
+                              </div>
+                            </div>
                             <p
-                              class="text-end text-secondary mt-2"
-                              style="font-size: 12px"
+                              class="text-secondary mx-2"
+                              style="font-size: 12px; margin-top: 5px"
                             >
                               {{ rate.created_at }}
                             </p>
+                          </div>
+
+                          <p class="text-black">
+                            {{ rate.description }}
+                          </p>
+                          <div class="justify-content-between d-flex">
                             <b-button
-                              class="outline-danger-custom btn-sm mt-2"
                               v-if="rate.user_id == user_logged"
                               @click="deleteRating(rate.id)"
-                              ><b-icon-trash></b-icon-trash
-                            ></b-button>
+                              class="outline-danger-custom"
+                              style="font-size: 12px; font-weight: 700"
+                            >
+                              Hapus
+                            </b-button>
                           </div>
                         </div>
                       </div>
@@ -162,6 +271,7 @@ export default {
       ratings: [],
       user_logged: localStorage.getItem("user_id"),
       role: localStorage.getItem("user_role"),
+      isBookmark: false,
     };
   },
 
@@ -169,7 +279,9 @@ export default {
     this.bookDetail();
     this.fetchRating();
     this.checkUserLogin();
+    this.savedCollection();
   },
+
 
   methods: {
     checkUserLogin() {
@@ -238,6 +350,41 @@ export default {
         .catch((error) => {
           console.error(error);
           alert("gagal add koleksi");
+        });
+    },
+
+    savedCollection() {
+      const userId = localStorage.getItem("user_id");
+      const addCollect = {
+        user_id: parseInt(userId),
+        book_id: this.$route.params.id,
+      };
+
+      api
+        .get(endpoints.hasCollection, { params: addCollect })
+        .then((response) => {
+          console.log(response.data);
+          if (response.data.data.length > 0) {
+            this.isBookmark = true;
+          }
+        });
+    },
+
+    deleteCollection() {
+      const userId = localStorage.getItem("user_id");
+      const delCollect = {
+        user_id: userId,
+        book_id: this.$route.params.id,
+      };
+      api
+        .delete(endpoints.deleteCollectionByUser, { params: delCollect })
+        .then((response) => {
+          console.log(response.data);
+          alert('Buku ini sudah terhapus dari koleksi anda')
+        })
+        .catch((error) => {
+          console.error(error);
+          alert("gagal hapus koleksi");
         });
     },
   },

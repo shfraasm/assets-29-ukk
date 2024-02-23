@@ -5,9 +5,9 @@
       <div class="p-3 alert-custom rounded-3 mb-3">
         <div class="justify-content-between d-flex">
           <p class="mx-2">
-            <b-icon-people></b-icon-people><strong> DATA PENGGUNA</strong>
+            <b-icon-people></b-icon-people><strong> DATA ADMIN</strong>
           </p>
-          
+
           <b-button
             class="rounded-3 gradient-btn mx-2"
             @click="showAddModal = true"
@@ -15,10 +15,9 @@
           >
         </div>
       </div>
-      
+
       <div class="justify-content-end d-flex">
         <div class="">
-
           <b-input-group class="mb-2">
             <b-form-input
               class="font-nunito mb-2"
@@ -26,12 +25,15 @@
               style="max-width: 300px"
               placeholder="Masukkan Kata Kunci"
               v-model="keyword"
-              @input="searchUser(keyword)"
+              @input="searchAdmin(keyword)"
             ></b-form-input>
             <b-input-group-append>
               <b-button
                 class="gradient-btn border-0"
-                style="border-bottom-left-radius: 0%; border-top-left-radius: 0%"
+                style="
+                  border-bottom-left-radius: 0%;
+                  border-top-left-radius: 0%;
+                "
               >
                 <b-icon icon="search" />
               </b-button>
@@ -46,7 +48,7 @@
         :items="users"
         :fields="fields"
         :per-page="perPage"
-      :current-page="currentPage"
+        :current-page="currentPage"
         label-sort-asc=""
         label-sort-desc=""
         label-sort-clear=""
@@ -67,8 +69,8 @@
               :to="{
                 name: 'detail-user',
                 params: {
-                  id: data.item.id
-                }
+                  id: data.item.id,
+                },
               }"
               ><b-icon-eye></b-icon-eye
             ></b-button>
@@ -96,12 +98,17 @@
     </div>
 
     <!-- modal detail -->
-    <b-modal id="modal-1" v-model="showDetailModal" title="Detail pengguna" hide-header-close>
-      <div v-if="selectedUser">
-        <p><strong>Nama Lengkap:</strong> {{ selectedUser.name }}</p>
-        <p><strong>Nama Pengguna:</strong> {{ selectedUser.username }}</p>
-        <p><strong>Email:</strong> {{ selectedUser.email }}</p>
-        <p><strong>Alamat:</strong> {{ selectedUser.address }}</p>
+    <b-modal
+      id="modal-1"
+      v-model="showDetailModal"
+      title="Detail Admin"
+      hide-header-close
+    >
+      <div v-if="selectedAdmin">
+        <p><strong>Nama Lengkap:</strong> {{ selectedAdmin.name }}</p>
+        <p><strong>Nama Pengguna:</strong> {{ selectedAdmin.username }}</p>
+        <p><strong>Email:</strong> {{ selectedAdmin.email }}</p>
+        <p><strong>Alamat:</strong> {{ selectedAdmin.address }}</p>
       </div>
     </b-modal>
 
@@ -109,61 +116,45 @@
     <b-modal
       id="modal-1"
       v-model="showAddModal"
-      title="Tambah Pengguna"
+      title="Tambah Admin"
       hide-footer
       hide-header-close
     >
       <b-form
-        @submit.prevent="addUser"
+        @submit.prevent="addAdmin"
         class="p-3"
         enctype="multipart/form-data"
         style="font-size: 15px"
       >
-        <b-form-group
-          class="font-nunito mb-3"
-          label="Nama lengkap"
-          
-        >
+        <b-form-group class="font-nunito mb-3" label="Nama lengkap">
           <b-form-input
             id="input-1"
             placeholder="Masukkan nama lengkap"
             class="font-nunito"
-            
             v-model="newUser.name"
             required
           ></b-form-input>
         </b-form-group>
 
-        <b-form-group
-          class="font-nunito mb-3"
-          label="Nama pengguna"
-          
-        >
+        <b-form-group class="font-nunito mb-3" label="Nama pengguna">
           <b-form-input
             id="input-2"
             placeholder="Masukkan nama pengguna"
             class="font-nunito"
-            
             v-model="newUser.username"
             required
           ></b-form-input>
         </b-form-group>
-        <b-form-group
-          class="font-nunito mb-3"
-          label="Email"
-          
-        >
+        <b-form-group class="font-nunito mb-3" label="Email">
           <b-form-input
             type="email"
             id="input-3"
-            
             v-model="newUser.email"
             class="font-nunito"
             placeholder="Masukkan email"
             required
           ></b-form-input>
         </b-form-group>
-
         <b-form-group class="font-nunito mb-3" label="Kata sandi">
           <b-form-input
             id="input-2"
@@ -175,14 +166,9 @@
           ></b-form-input>
         </b-form-group>
 
-        <b-form-group
-          class="font-nunito mb-3"
-          label="Alamat"
-          
-        >
+        <b-form-group class="font-nunito mb-3" label="Alamat">
           <b-form-textarea
             id="textarea-2"
-            
             v-model="newUser.address"
             class="font-nunito"
             placeholder="Masukkan alamat"
@@ -206,10 +192,9 @@
     <b-modal
       id="modal-1"
       v-model="showEditModal"
-      title="Tambah Pengguna"
+      title="Tambah Admin"
       hide-footer
       hide-header-close
-      
     >
       <b-form
         @submit.prevent="editUser"
@@ -217,11 +202,7 @@
         enctype="multipart/form-data"
         style="font-size: 15px"
       >
-        <b-form-group
-          class="font-nunito mb-3"
-          label="Nama lengkap"
-          
-        >
+        <b-form-group class="font-nunito mb-3" label="Nama lengkap">
           <b-form-input
             id="input-1"
             placeholder="Masukkan nama lengkap"
@@ -231,11 +212,7 @@
           ></b-form-input>
         </b-form-group>
 
-        <b-form-group
-          class="font-nunito mb-3"
-          label="Nama pengguna"
-          
-        >
+        <b-form-group class="font-nunito mb-3" label="Nama pengguna">
           <b-form-input
             id="input-2"
             placeholder="Masukkan nama pengguna"
@@ -244,11 +221,7 @@
             required
           ></b-form-input>
         </b-form-group>
-        <b-form-group
-          class="font-nunito mb-3"
-          label="Email"
-          
-        >
+        <b-form-group class="font-nunito mb-3" label="Email">
           <b-form-input
             type="email"
             id="input-3"
@@ -259,11 +232,7 @@
           ></b-form-input>
         </b-form-group>
 
-        <b-form-group
-          class="font-nunito mb-3"
-          label="Alamat"
-          
-        >
+        <b-form-group class="font-nunito mb-3" label="Alamat">
           <b-form-textarea
             id="textarea-2"
             v-model="newUser.address"
@@ -312,14 +281,14 @@ export default {
         { key: "actions", label: "AKSI" },
       ],
       showDetailModal: false,
-      selectedUser: null,
+      selectedAdmin: null,
       showAddModal: false,
       showEditModal: false,
       newUser: {},
     };
   },
   mounted() {
-    this.fetchUsers();
+    this.fetchAdmins();
     this.checkRole();
     this.checkUserLogin();
   },
@@ -331,7 +300,9 @@ export default {
       }
     },
     checkRole() {
-      if (this.role == 2) {
+      if (this.role == 1) {
+        this.$router.push("/access-denied");
+      } else if (this.role == 2) {
         this.$router.push("/access-denied");
       }
     },
@@ -339,9 +310,9 @@ export default {
     setUsers(data) {
       this.users = data.data;
     },
-    fetchUsers() {
+    fetchAdmins() {
       api
-        .get(endpoints.getUser2)
+        .get(endpoints.getUser0)
         .then((response) => {
           this.setUsers(response.data);
         })
@@ -351,20 +322,21 @@ export default {
         });
     },
 
-    searchUser(keyword) {
-        api
-          .get(endpoints.searchUser, { params: { keyword: keyword } })
-          .then((response) => {
-            this.setUsers(response.data);
-          }).catch(error => {
-            console.error(error);
-            alert('pencarian tidak ditemukan')
-          });
-      },
+    searchAdmin(keyword) {
+      api
+        .get(endpoints.searchAdmin, { params: { keyword: keyword } })
+        .then((response) => {
+          this.setUsers(response.data);
+        })
+        .catch((error) => {
+          console.error(error);
+          alert("pencarian tidak ditemukan");
+        });
+    },
 
     // detail data
     setDetail(data) {
-      this.selectedUser = data.data;
+      this.selectedAdmin = data.data;
     },
     detailUser(id) {
       api
@@ -379,16 +351,16 @@ export default {
         });
     },
 
-    addUser() {
+    addAdmin() {
       let formData = new FormData();
       for (let key in this.newUser) {
         formData.append(key, this.newUser[key]);
       }
       api
-        .post(endpoints.addUser2, formData)
+        .post(endpoints.addUser0, formData)
         .then((response) => {
           console.log(response.data);
-          this.fetchUsers();
+          this.fetchAdmins();
           this.showAddModal = false;
         })
         .catch((error) => {
@@ -412,7 +384,7 @@ export default {
         .post(endpoints.editUser(this.newUser.id), formData)
         .then((response) => {
           console.log(response.data);
-          this.fetchUsers();
+          this.fetchAdmins();
           this.showEditModal = false;
         })
         .catch((error) => {
@@ -426,7 +398,7 @@ export default {
       api
         .delete(endpoints.deleteUser(id))
         .then((response) => {
-          this.fetchUsers();
+          this.fetchAdmins();
         })
         .catch((error) => {
           console.error(error);

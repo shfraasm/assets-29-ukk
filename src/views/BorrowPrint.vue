@@ -2,7 +2,7 @@
   <div class="vh-100">
     <div class="container py-5 px-5 justify-content-center d-flex">
       <div
-        class="container px-5 py-3 mt-5"
+        class="container px-2 py-3 mt-5"
         style="width: 600px"
         v-if="selectedBorrow"
       >

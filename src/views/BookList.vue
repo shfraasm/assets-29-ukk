@@ -7,7 +7,7 @@
           <p class="mx-2">
             <b-icon-table></b-icon-table><strong> DATA BUKU</strong>
           </p>
-         
+
           <b-button
             class="rounded-3 gradient-btn mx-2"
             @click="showAddModal = true"
@@ -17,30 +17,37 @@
       </div>
 
       <div class="justify-content-end d-flex">
-        <b-input-group class="mb-2">
-          <b-form-input
-            class="font-nunito mb-2"
-            prepend="cari"
-            style="max-width: 300px"
-            placeholder="Masukkan Kata Kunci"
-            v-model="keyword"
-            @input="searchBooks(keyword)"
-          ></b-form-input>
-          <b-input-group-append>
-            <b-button
-              class="gradient-btn border-0"
-              style="border-bottom-left-radius: 0%; border-top-left-radius: 0%"
-            >
-              <b-icon icon="search" />
-            </b-button>
-          </b-input-group-append>
-        </b-input-group>
+        <div class="">
+          <b-input-group class="mb-2">
+            <b-form-input
+              class="font-nunito mb-2"
+              prepend="cari"
+              style="max-width: 300px"
+              placeholder="Masukkan Kata Kunci"
+              v-model="keyword"
+              @input="searchBooks(keyword)"
+            ></b-form-input>
+            <b-input-group-append>
+              <b-button
+                class="gradient-btn border-0"
+                style="
+                  border-bottom-left-radius: 0%;
+                  border-top-left-radius: 0%;
+                "
+              >
+                <b-icon icon="search" />
+              </b-button>
+            </b-input-group-append>
+          </b-input-group>
+        </div>
       </div>
 
       <b-table
         class="custom-table"
         :items="books"
         hover
+        :per-page="perPage"
+      :current-page="currentPage"
         bordered
         :fields="fields"
         label-sort-asc=""
@@ -90,16 +97,22 @@
       </b-table>
 
       <b-pagination
-        align="fill"
+        align="center"
         v-model="currentPage"
-        :total-rows="books.length"
+        :total-rows="rows"
         :per-page="perPage"
         aria-controls="my-table"
       ></b-pagination>
     </div>
 
     <!-- modal detail -->
-    <b-modal id="modal-1" v-model="showDetailModal" title="Detail Buku" hide-header-close>
+    <b-modal
+      id="modal-1"
+      v-model="showDetailModal"
+      title="Detail Buku"
+      hide-header-close
+      scrollable
+    >
       <div v-if="selectedBook">
         <p><strong>Nama:</strong> {{ selectedBook.name }}</p>
         <p><strong>Sinopsis:</strong> {{ selectedBook.description }}</p>
@@ -118,15 +131,21 @@
       v-model="showAddModal"
       title="Tambah Buku"
       hide-footer
+      size="lg"
       hide-header-close
     >
       <b-form
         @submit.prevent="addBook"
         class="p-3"
         enctype="multipart/form-data"
+        style="font-size: 15px"
       >
         <!-- name -->
-        <b-form-group class="mb-2">
+        <b-form-group
+          class="font-nunito mb-3"
+          label="Judul"
+          
+        >
           <b-form-input
             id="input-2"
             placeholder="Masukkan nama buku"
@@ -137,9 +156,15 @@
         </b-form-group>
 
         <!-- description -->
-        <b-form-group class="mb-2">
+        <b-form-group
+          class="font-nunito mb-3"
+          label="Sinopsis"
+          
+        >
           <b-form-textarea
             id="input-2"
+            rows="6"
+            max-rows="9"
             placeholder="Masukkan sinopsis"
             v-model="newBook.description"
             class="font-nunito"
@@ -148,13 +173,24 @@
         </b-form-group>
 
         <!-- photo -->
-        <b-form-file
-          v-model="newBook.photo"
-          class="font-nunito mb-2"
-          @change="handleFileChange"
-        ></b-form-file>
+        <label for="" class="font-nunito mb-1" 
+          >Cover buku</label
+        >
+        <div class="mb-3">
+          <input
+            class="form-control"
+            type="file"
+            id="formFile"
+            @change="handleFileChange"
+          />
+        </div>
 
-        <b-form-group v-slot="{ ariaDescribedby }">
+        <b-form-group
+          v-slot="{ ariaDescribedby }"
+          class="font-nunito mb-3"
+          label="Kategori"
+          
+        >
           <b-form-radio
             v-model="newBook.category"
             :aria-describedby="ariaDescribedby"
@@ -169,7 +205,6 @@
             :aria-describedby="ariaDescribedby"
             name="radio-inline"
             class="font-nunito mb-2"
-
             size="sm"
             value="Nonfiksi"
             >Nonfiksi</b-form-radio
@@ -177,7 +212,11 @@
         </b-form-group>
 
         <!-- remaining_stok -->
-        <b-form-group class="mb-2">
+        <b-form-group
+          class="font-nunito mb-3"
+          label="Jumlah stok"
+          
+        >
           <b-form-input
             type="number"
             id="input-2"
@@ -189,7 +228,11 @@
         </b-form-group>
 
         <!-- author -->
-        <b-form-group class="mb-2">
+        <b-form-group
+          class="font-nunito mb-3"
+          label="Penulis"
+          
+        >
           <b-form-input
             id="input-2"
             v-model="newBook.author"
@@ -200,7 +243,11 @@
         </b-form-group>
 
         <!-- publisher -->
-        <b-form-group class="mb-2">
+        <b-form-group
+          class="font-nunito mb-3"
+          label="Penerbit"
+          
+        >
           <b-form-input
             id="input-2"
             v-model="newBook.publisher"
@@ -209,13 +256,18 @@
             required
           ></b-form-input>
         </b-form-group>
+
         <!-- published_year -->
-        <b-form-group class="mb-2">
+        <b-form-group
+          class="font-nunito mb-3"
+          label="Tahun terbit"
+          
+        >
           <b-form-input
             id="input-2"
             v-model="newBook.published_year"
             class="font-nunito"
-            placeholder="Masukkan tahun rilis"
+            placeholder="Masukkan tahun terbit"
             type="number"
             min="1990"
             max="2024"
@@ -239,16 +291,23 @@
     <b-modal
       id="modal-1"
       v-model="showEditModal"
-      title="Edit Buku"
+      title="Tambah Buku"
       hide-footer
+      size="lg"
+      hide-header-close
     >
       <b-form
         @submit.prevent="editBook"
         class="p-3"
         enctype="multipart/form-data"
+        style="font-size: 15px"
       >
         <!-- name -->
-        <b-form-group class="mb-2">
+        <b-form-group
+          class="font-nunito mb-3"
+          label="Judul"
+          
+        >
           <b-form-input
             id="input-2"
             placeholder="Masukkan nama buku"
@@ -259,9 +318,15 @@
         </b-form-group>
 
         <!-- description -->
-        <b-form-group class="mb-2">
+        <b-form-group
+          class="font-nunito mb-3"
+          label="Sinopsis"
+          
+        >
           <b-form-textarea
             id="input-2"
+            rows="6"
+            max-rows="9"
             placeholder="Masukkan sinopsis"
             v-model="newBook.description"
             class="font-nunito"
@@ -270,33 +335,50 @@
         </b-form-group>
 
         <!-- photo -->
-        <b-form-file
-          v-model="newBook.photo"
-          class="mb-2"
-          drop-placeholder="Drop file here..."
-          @change="handleFileChange"
-        ></b-form-file>
+        <label for="" class="font-nunito mb-1" 
+          >Cover buku</label
+        >
+        <div class="mb-3">
+          <input
+            class="form-control"
+            type="file"
+            id="formFile"
+            @change="handleFileChange"
+          />
+        </div>
 
-        <b-form-group v-slot="{ ariaDescribedby }">
+        <b-form-group
+          v-slot="{ ariaDescribedby }"
+          class="font-nunito mb-3"
+          label="Kategori"
+          
+        >
           <b-form-radio
             v-model="newBook.category"
             :aria-describedby="ariaDescribedby"
-            name="some-radios"
+            name="radio-inline"
+            size="sm"
             value="Fiksi"
+            class="font-nunito"
             >Fiksi</b-form-radio
           >
           <b-form-radio
             v-model="newBook.category"
             :aria-describedby="ariaDescribedby"
-            name="some-radios"
-            class="mb-2"
+            name="radio-inline"
+            class="font-nunito mb-2"
+            size="sm"
             value="Nonfiksi"
             >Nonfiksi</b-form-radio
           >
         </b-form-group>
 
         <!-- remaining_stok -->
-        <b-form-group class="mb-2">
+        <b-form-group
+          class="font-nunito mb-3"
+          label="Jumlah stok"
+          
+        >
           <b-form-input
             type="number"
             id="input-2"
@@ -308,7 +390,11 @@
         </b-form-group>
 
         <!-- author -->
-        <b-form-group class="mb-2">
+        <b-form-group
+          class="font-nunito mb-3"
+          label="Penulis"
+          
+        >
           <b-form-input
             id="input-2"
             v-model="newBook.author"
@@ -319,7 +405,11 @@
         </b-form-group>
 
         <!-- publisher -->
-        <b-form-group class="mb-2">
+        <b-form-group
+          class="font-nunito mb-3"
+          label="Penerbit"
+          
+        >
           <b-form-input
             id="input-2"
             v-model="newBook.publisher"
@@ -328,20 +418,25 @@
             required
           ></b-form-input>
         </b-form-group>
+
         <!-- published_year -->
-        <b-form-group class="mb-2">
+        <b-form-group
+          class="font-nunito mb-3"
+          label="Tahun terbit"
+          
+        >
           <b-form-input
             id="input-2"
             v-model="newBook.published_year"
             class="font-nunito"
-            placeholder="Masukkan tahun rilis"
+            placeholder="Masukkan tahun terbit"
             type="number"
             min="1990"
             max="2024"
             required
           ></b-form-input>
         </b-form-group>
-        <div class="justify-content-between d-flex mt-2">
+        <div class="justify-content-between d-flex">
           <b-button
             class="button-secondary border-0"
             @click="showEditModal = false"
@@ -370,11 +465,11 @@ export default {
   data() {
     return {
       books: [],
-      role: localStorage.getItem('user_role'),
+      role: localStorage.getItem("user_role"),
       fields: [
         { key: "id", label: "NO", sortable: true },
-        { key: "name", label: "Nama buku", sortable: true },
         { key: "photo", label: "Cover Buku" },
+        { key: "name", label: "Nama buku", sortable: true },
         { key: "category", label: "Kategori", sortable: true },
         { key: "remaining_stock", label: "Stok", sortable: true },
         { key: "actions", label: "AKSI" },
@@ -384,10 +479,10 @@ export default {
       showAddModal: false,
       showEditModal: false,
       keyword: "",
-      perPage: 5,
-      currentPage: 3,
+      perPage: 3,
+      currentPage: 1,
       newBook: {},
-      user_logged: localStorage.getItem('user_id'),
+      user_logged: localStorage.getItem("user_id"),
     };
   },
   mounted() {
@@ -396,16 +491,22 @@ export default {
     this.checkUserLogin();
   },
 
+  computed: {
+      rows() {
+        return this.books.length
+      }
+    },
+
   methods: {
     checkUserLogin() {
       if (this.user_logged == null) {
-        this.$router.push('/access-denied')
+        this.$router.push("/access-denied");
       }
     },
 
     checkRole() {
       if (this.role == 2) {
-        this.$router.push('/access-denied')
+        this.$router.push("/access-denied");
       }
     },
 
@@ -426,15 +527,16 @@ export default {
     },
 
     searchBooks(keyword) {
-        api
-          .get(endpoints.searchBook, { params: { keyword: keyword } })
-          .then((response) => {
-            this.setBooks(response.data);
-          }).catch(error => {
-            console.error(error);
-            alert('pencarian tidak ditemukan')
-          });
-      },
+      api
+        .get(endpoints.searchBook, { params: { keyword: keyword } })
+        .then((response) => {
+          this.setBooks(response.data);
+        })
+        .catch((error) => {
+          console.error(error);
+          alert("pencarian tidak ditemukan");
+        });
+    },
 
     // detail data
     setDetail(data) {
@@ -494,7 +596,7 @@ export default {
         .post(endpoints.editBook(this.newBook.id), formData)
         .then((response) => {
           console.log(response.data);
-          this.fetchBooks()
+          this.fetchBooks();
           this.showEditModal = false;
         })
         .catch((error) => {
@@ -508,7 +610,7 @@ export default {
       api
         .delete(endpoints.deleteBook(id))
         .then((response) => {
-          this.fetchBooks()
+          this.fetchBooks();
         })
         .catch((error) => {
           console.error(error);
