@@ -63,6 +63,11 @@ const router = new VueRouter({
       component: () => import("../views/UserList.vue")
     },
     {
+      path: "/users/detail/:id",
+      name: "detail-user",
+      component: () => import("../views/UserDetail.vue"),
+      },
+    {
       path: "/operators",
       name: "operators",
       component: () => import("../views/OperatorList.vue")

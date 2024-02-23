@@ -14,6 +14,28 @@
           >
         </div>
       </div>
+
+      <div class="justify-content-end d-flex">
+        <b-input-group class="mb-2">
+          <b-form-input
+            class="font-nunito mb-2"
+            prepend="cari"
+            style="max-width: 300px"
+            placeholder="Masukkan Kata Kunci"
+            v-model="keyword"
+            @input="searchBorrow(keyword)"
+          ></b-form-input>
+          <b-input-group-append>
+            <b-button
+              class="gradient-btn border-0"
+              style="border-bottom-left-radius: 0%; border-top-left-radius: 0%"
+            >
+              <b-icon icon="search" />
+            </b-button>
+          </b-input-group-append>
+        </b-input-group>
+      </div>
+
       <b-table
         label-sort-asc=""
         label-sort-desc=""
@@ -39,9 +61,17 @@
 
         <template #cell(actions)="data">
           <div class="">
-            <b-button
+            <!-- <b-button
               class="m-1 btn-sm outline-primary-custom"
               @click="detailBorrow(data.item.id)"
+              ><b-icon-eye></b-icon-eye
+            ></b-button> -->
+            <b-button
+              class="m-1 btn-sm outline-primary-custom"
+              :to="{
+                name: 'borrows-print',
+                params: { id: data.item.id },
+              }"
               ><b-icon-eye></b-icon-eye
             ></b-button>
             <b-button
@@ -71,6 +101,13 @@
           >
         </template>
       </b-table>
+      <b-pagination
+        align="fill"
+        v-model="currentPage"
+        :total-rows="borrows.length"
+        :per-page="perPage"
+        aria-controls="my-table"
+      ></b-pagination>
     </div>
 
     <!-- modal detail -->
@@ -121,7 +158,7 @@
       hide-footer
     >
       <b-form @submit.prevent="addBorrow">
-        <b-form-group class="mb-2">
+        <!-- <b-form-group class="mb-2"> -->
           <b-form-select
             v-model="newBorrow.user_id"
             :options="users"
@@ -130,7 +167,7 @@
             size="sm"
             class="font-nunito mt-3"
           ></b-form-select>
-        </b-form-group>
+        <!-- </b-form-group> -->
         <b-form-group class="mb-2">
           <b-form-select
             v-model="newBorrow.book_id"
@@ -152,7 +189,7 @@
         </b-form-group>
         <b-form-group class="font-nunito mb-2" label="Tanggal pinjam">
           <b-form-input
-          placeholder="Jumlah Buku"
+            placeholder="Jumlah Buku"
             type="date"
             v-model="newBorrow.start_date"
             required
@@ -160,7 +197,7 @@
         </b-form-group>
         <b-form-group class="font-nunito mb-2" label="Tanggal kembali">
           <b-form-input
-          placeholder="Jumlah Buku"
+            placeholder="Jumlah Buku"
             type="date"
             v-model="newBorrow.end_date"
             required
@@ -312,6 +349,9 @@ export default {
       borrows: [],
       users: [],
       books: [],
+      keyword: "",
+      perPage: 5,
+      currentPage: 3,
       showDetailModal: false,
       showAddModal: false,
       showEditModal: false,
@@ -326,19 +366,19 @@ export default {
     this.fetchBookOption();
     this.fetchUserOption();
     this.checkUserLogin();
-    this.checkRole()
+    this.checkRole();
   },
 
   methods: {
     checkUserLogin() {
       if (this.user_logged == null) {
-        this.$router.push('/access-denied')
+        this.$router.push("/access-denied");
       }
     },
 
     checkRole() {
       if (this.role == 2) {
-        this.$router.push('/access-denied')
+        this.$router.push("/access-denied");
       }
     },
 
@@ -354,6 +394,18 @@ export default {
         .catch((error) => {
           console.error(error);
           alert("gagal fetch data");
+        });
+    },
+
+    searchBorrow(keyword) {
+      api
+        .get(endpoints.searchBorrow, { params: { keyword: keyword } })
+        .then((response) => {
+          this.setBorrow(response.data);
+        })
+        .catch((error) => {
+          console.error(error);
+          alert("pencarian tidak ditemukan");
         });
     },
 

@@ -56,7 +56,7 @@
       </div>
     </div>
 
-    <div class="bg-light pt-2">
+    <div class="bg-white pt-2">
       <FooterBottom />
     </div>
   </div>

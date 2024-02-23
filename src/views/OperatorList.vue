@@ -14,12 +14,34 @@
           >
         </div>
       </div>
+      <div class="justify-content-end d-flex">
+        <b-input-group class="mb-2">
+          <b-form-input
+            class="font-nunito mb-2"
+            prepend="cari"
+            style="max-width: 300px"
+            placeholder="Masukkan Kata Kunci"
+            v-model="keyword"
+            @input="searchOperator(keyword)"
+          ></b-form-input>
+          <b-input-group-append>
+            <b-button
+              class="gradient-btn border-0"
+              style="border-bottom-left-radius: 0%; border-top-left-radius: 0%"
+            >
+              <b-icon icon="search" />
+            </b-button>
+          </b-input-group-append>
+        </b-input-group>
+      </div>
       <b-table
         bordered
         hover
         class="custom-table rounded-3"
         :items="operators"
         :fields="fields"
+        :per-page="perPage"
+        :current-page="currentPage"
         label-sort-asc=""
         label-sort-desc=""
         label-sort-clear=""
@@ -30,9 +52,19 @@
 
         <template #cell(actions)="data">
           <div class="my-1">
-            <b-button
+            <!-- <b-button
               class="m-1 btn-sm outline-primary-custom"
               @click="detailOperator(data.item.id)"
+              ><b-icon-eye></b-icon-eye
+            ></b-button> -->
+            <b-button
+              class="m-1 btn-sm outline-primary-custom"
+              :to="{
+                name: 'detail-user',
+                params: {
+                  id: data.item.id
+                }
+              }"
               ><b-icon-eye></b-icon-eye
             ></b-button>
             <b-button
@@ -48,6 +80,14 @@
           </div>
         </template>
       </b-table>
+
+      <b-pagination
+        align="fill"
+        v-model="currentPage"
+        :total-rows="operators.length"
+        :per-page="perPage"
+        aria-controls="my-table"
+      ></b-pagination>
     </div>
 
     <!-- modal detail -->
@@ -151,7 +191,6 @@
           <b-form-input
             id="input-1"
             class="font-nunito"
-            
             placeholder="Masukkan nama lengkap"
             v-model="newOp.name"
             required
@@ -218,6 +257,8 @@ export default {
       role: localStorage.getItem("user_role"),
       user_logged: localStorage.getItem("user_id"),
       operators: [],
+      perPage: 5,
+      currentPage: 3,
       fields: [
         { key: "id", label: "NO", sortable: true },
         { key: "username", label: "Nama Petugas" },
@@ -226,11 +267,10 @@ export default {
       ],
       showDetailModal: false,
       showEditModal: false,
+      keyword: "",
       selectedOperator: null,
       showAddModal: false,
-      newOp: {
-       
-      },
+      newOp: {},
     };
   },
   mounted() {
@@ -246,14 +286,16 @@ export default {
       }
     },
     checkRole() {
-      if (this.role == 2) {
+      if (this.role == 1) {
+        this.$router.push("/access-denied");
+      } else if (this.role == 2) {
         this.$router.push("/access-denied");
       }
     },
 
     // fetch data
     setOperators(data) {
-      this.operators = data.data
+      this.operators = data.data;
     },
     fetchOperators() {
       api
@@ -269,7 +311,7 @@ export default {
 
     // detail data
     setDetail(data) {
-      this.selectedOperator = data.data
+      this.selectedOperator = data.data;
     },
     detailOperator(id) {
       api
@@ -281,6 +323,18 @@ export default {
         .catch((error) => {
           console.error(error);
           alert("gagal get data");
+        });
+    },
+
+    searchOperator(keyword) {
+      api
+        .get(endpoints.searchOp, { params: { keyword: keyword } })
+        .then((response) => {
+          this.setOperators(response.data);
+        })
+        .catch((error) => {
+          console.error(error);
+          alert("pencarian tidak ditemukan");
         });
     },
 
@@ -302,9 +356,9 @@ export default {
         });
     },
 
-    openEditModal(op){
-      this.newOp = {...op}
-      this.showEditModal = true
+    openEditModal(op) {
+      this.newOp = { ...op };
+      this.showEditModal = true;
     },
 
     editOperator() {
@@ -312,7 +366,7 @@ export default {
       for (let key in this.newOp) {
         formData.append(key, this.newOp[key]);
       }
-      formData.append("_method", "PUT")
+      formData.append("_method", "PUT");
       api
         .post(endpoints.editUser(this.newOp.id), formData)
         .then((response) => {

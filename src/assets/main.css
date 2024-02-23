@@ -255,6 +255,11 @@ h5 {
   font-family: 'Nunito', sans-serif;
 }
 
+.custom-pagination .page-item .active .page-link{
+  color: white;
+  background-color: green!important;
+}
+
 
 .alert-custom {
   background-color: #ffffff;
@@ -295,7 +300,7 @@ h5 {
   top: 25px;
   left: 0;
   width: 100%;
-  background-color: #f8f9fa;
+  background-color: #ffffff;
   box-sizing: border-box;
 }
 
@@ -304,7 +309,7 @@ h5 {
   bottom: 0;
   left: 0;
   width: 100%;
-  background-color: #f8f9fa;
+  background-color: #ffffff;
   box-sizing: border-box;
 }
 

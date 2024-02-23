@@ -20,7 +20,7 @@
       <div class="row v-else" v-else>
         <div class="d-flex justify-content-center my-2">
           <div class="v-for" v-for="(col, index) in collections" :key="index">
-            <div class="bg-light p-3 mx-3 rounded-3">
+            <div class="bg-white p-3 mx-3 rounded-3">
               <img
                 :src="col.book_photo"
                 style="max-width: 170px; max-height: 220px"
@@ -46,8 +46,11 @@
               <b-button
                 class="gradient-btn btn-sm mx-1"
                 @click="deleteCollection(col.id)"
+                v-b-popover.hover.bottomleft="'Menghapus buku ini dari koleksi anda'"
+                      title="Hapus"
                 ><b-icon-bookmark-fill></b-icon-bookmark-fill
               ></b-button>
+             
             </div>
           </div>
         </div>

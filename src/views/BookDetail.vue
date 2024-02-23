@@ -20,7 +20,12 @@
                     <h3>
                       <b>{{ selectedBook.name }}</b>
                     </h3>
-                    <b-button class="gradient-btn btn-sm" @click="createCollection"
+                    <b-button
+                      class="gradient-btn btn-sm font-nunito"
+                      v-b-popover.hover.bottomleft="'Simpan buku ini di koleksi anda'"
+                      title="Simpan"
+                      @click="createCollection"
+                      v-if="role == '2'"
                       ><b-icon-bookmark-fill></b-icon-bookmark-fill
                     ></b-button>
                   </div>
@@ -50,7 +55,16 @@
                   </div>
                 </div>
                 <div class="justify-content-start d-flex mt-2">
-                  <b-button class="btn-sm button-primary" to="/booklist"
+                  <b-button
+                    class="btn-sm button-primary"
+                    to="/booklist"
+                    v-if="role == '2'"
+                    ><b-icon-arrow-left></b-icon-arrow-left> Kembali</b-button
+                  >
+                  <b-button
+                    class="btn-sm button-primary"
+                    to="/books"
+                    v-if="role == '1' || role == '0'"
                     ><b-icon-arrow-left></b-icon-arrow-left> Kembali</b-button
                   >
                 </div>
@@ -84,13 +98,26 @@
                           </p>
                           <div class="card">
                             <p class="text-black pt-2 px-2">
-                              {{ rate.description }}   (<b-icon-star-fill
+                              {{ rate.description }} (<b-icon-star-fill
                                 variant="warning"
                               ></b-icon-star-fill>
                               {{ rate.star }})
                             </p>
                           </div>
-                          <b-button class="outline-danger-custom btn-sm mt-2" v-if="rate.user_id == user_logged" @click="deleteRating(rate.id)"><b-icon-trash></b-icon-trash></b-button>
+                          <div class="justify-content-between d-flex">
+                            <p
+                              class="text-end text-secondary mt-2"
+                              style="font-size: 12px"
+                            >
+                              {{ rate.created_at }}
+                            </p>
+                            <b-button
+                              class="outline-danger-custom btn-sm mt-2"
+                              v-if="rate.user_id == user_logged"
+                              @click="deleteRating(rate.id)"
+                              ><b-icon-trash></b-icon-trash
+                            ></b-button>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -98,13 +125,14 @@
                 </div>
                 <div class="justify-content-end d-flex mx-1">
                   <b-button
+                    v-if="role == '2'"
                     class="gradient-btn btn-sm"
                     style="width: 100px"
                     :to="{
                       name: 'rating-book',
-                      params:{
-                        id: selectedBook.id
-                      }
+                      params: {
+                        id: selectedBook.id,
+                      },
                     }"
                     >Beri Ulasan</b-button
                   >
@@ -132,7 +160,8 @@ export default {
     return {
       selectedBook: null,
       ratings: [],
-      user_logged: localStorage.getItem('user_id'),
+      user_logged: localStorage.getItem("user_id"),
+      role: localStorage.getItem("user_role"),
     };
   },
 
@@ -145,7 +174,7 @@ export default {
   methods: {
     checkUserLogin() {
       if (this.user_logged == null) {
-        this.$router.push('/access-denied')
+        this.$router.push("/access-denied");
       }
     },
 
@@ -177,7 +206,7 @@ export default {
         })
         .catch((error) => {
           console.error(error);
-          alert('gagal get rating')
+          alert("gagal get rating");
         });
     },
 
@@ -185,30 +214,30 @@ export default {
       api
         .delete(endpoints.destroyRating(id))
         .then((response) => {
-          this.fetchRating()
+          this.fetchRating();
         })
         .catch((error) => {
           console.error(error);
-          alert('gagal get rating')
+          alert("gagal get rating");
         });
     },
 
     createCollection() {
-      const userId = localStorage.getItem('user_id')
+      const userId = localStorage.getItem("user_id");
       const addCollect = {
         user_id: userId,
-        book_id: this.selectedBook.id
-      }
+        book_id: this.selectedBook.id,
+      };
       api
         .post(endpoints.addCollection, addCollect)
         .then((response) => {
           if (response.status == 200) {
-            alert('berhasil tesimpan di koleksi anda')
+            alert("berhasil tesimpan di koleksi anda");
           }
         })
         .catch((error) => {
           console.error(error);
-          alert('gagal add koleksi')
+          alert("gagal add koleksi");
         });
     },
   },

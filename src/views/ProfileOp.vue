@@ -39,21 +39,22 @@
                         class="btn-sm button-primary border-0"
                         v-if="role == '0'"
                         to="/dashboard-admin"
-                        ><b-icon-arrow-left></b-icon-arrow-left> Kembali</b-button
+                        ><b-icon-arrow-left></b-icon-arrow-left>
+                        Kembali</b-button
                       >
                       <b-button
                         class="btn-sm button-primary border-0"
                         v-if="role == '1'"
                         to="/dashboard-operator"
-                        ><b-icon-arrow-left></b-icon-arrow-left> Kembali</b-button
+                        ><b-icon-arrow-left></b-icon-arrow-left>
+                        Kembali</b-button
                       >
                     </div>
                     <div class="">
                       <b-button
                         class="btn-sm button-danger border-0"
                         @click="showDeleteModal = true"
-                        ><b-icon-trash></b-icon-trash> Hapus
-                        Akun</b-button
+                        ><b-icon-trash></b-icon-trash> Hapus Akun</b-button
                       >
                     </div>
                   </div>
@@ -64,13 +65,16 @@
         </div>
       </div>
     </div>
-       <!-- modal logout -->
-       <b-modal id="modal-1" v-model="showDeleteModal" hide-footer hide-header>
+    <!-- modal delete account -->
+    <b-modal id="modal-1" v-model="showDeleteModal" hide-footer hide-header>
       <div class="justify-content-end d-flex">
-        <b-button class="btn-close" @click="showLogoutModal = false"></b-button>
+        <b-button class="btn-close" @click="showDeleteModal = false"></b-button>
       </div>
       <div class="text-center align-items-center pt-3 pb-4">
-        <b-icon-exclamation-circle font-scale="5.5" class="text-danger"></b-icon-exclamation-circle>
+        <b-icon-exclamation-circle
+          font-scale="5.5"
+          class="text-danger"
+        ></b-icon-exclamation-circle>
         <h5
           class="mt-4 text-black"
           style="font-family: 'Nunito', sans-serif !important"
@@ -81,7 +85,7 @@
         <b-button
           variant="secondary"
           class="mx-2 mt-3"
-          @click="showLogoutModal = false"
+          @click="showDeleteModal = false"
           >Batal</b-button
         >
         <b-button variant="danger" class="mt-3" @click="deleteAccount"
@@ -106,11 +110,10 @@ export default {
 
   data() {
     return {
-      books: [],
       users: null,
       role: localStorage.getItem("user_role"),
       user_logged: localStorage.getItem("user_id"),
-      showDeleteModal: false
+      showDeleteModal: false,
     };
   },
 
@@ -144,7 +147,21 @@ export default {
     },
 
     deleteAccount() {
-      // ongoing
+      const id = localStorage.getItem("user_id");
+      api
+        .delete(endpoints.deleteUser(id))
+        .then((response) => {
+          localStorage.removeItem("user_id");
+          localStorage.removeItem("user_name");
+          localStorage.removeItem("username");
+          localStorage.removeItem("user_role");
+          localStorage.removeItem("token");
+          this.$router.push("/");
+        })
+        .catch((error) => {
+          console.error(error);
+          alert("gagal delete akun");
+        });
     },
   },
 };

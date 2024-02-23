@@ -7,12 +7,34 @@
           <p class="mx-2">
             <b-icon-people></b-icon-people><strong> DATA PENGGUNA</strong>
           </p>
+          
           <b-button
             class="rounded-3 gradient-btn mx-2"
             @click="showAddModal = true"
             ><b-icon-plus></b-icon-plus> Tambah</b-button
           >
         </div>
+      </div>
+      
+      <div class="justify-content-end d-flex">
+        <b-input-group class="mb-2">
+          <b-form-input
+            class="font-nunito mb-2"
+            prepend="cari"
+            style="max-width: 300px"
+            placeholder="Masukkan Kata Kunci"
+            v-model="keyword"
+            @input="searchUser(keyword)"
+          ></b-form-input>
+          <b-input-group-append>
+            <b-button
+              class="gradient-btn border-0"
+              style="border-bottom-left-radius: 0%; border-top-left-radius: 0%"
+            >
+              <b-icon icon="search" />
+            </b-button>
+          </b-input-group-append>
+        </b-input-group>
       </div>
       <b-table
         bordered
@@ -30,9 +52,19 @@
 
         <template #cell(actions)="data">
           <div class="my-1">
-            <b-button
+            <!-- <b-button
               class="m-1 btn-sm outline-primary-custom"
               @click="detailUser(data.item.id)"
+              ><b-icon-eye></b-icon-eye
+            ></b-button> -->
+            <b-button
+              class="m-1 btn-sm outline-primary-custom"
+              :to="{
+                name: 'detail-user',
+                params: {
+                  id: data.item.id
+                }
+              }"
               ><b-icon-eye></b-icon-eye
             ></b-button>
             <b-button
@@ -48,6 +80,14 @@
           </div>
         </template>
       </b-table>
+
+      <b-pagination
+        align="center"
+        v-model="currentPage"
+        :total-rows="users.length"
+        :per-page="perPage"
+        aria-controls="my-table"
+      ></b-pagination>
     </div>
 
     <!-- modal detail -->
@@ -228,6 +268,9 @@ export default {
       role: localStorage.getItem("user_role"),
       user_logged: localStorage.getItem("user_id"),
       users: [],
+      keyword: "",
+      perPage: 5,
+      currentPage: 3,
       fields: [
         { key: "id", label: "NO", sortable: true },
         { key: "username", label: "Nama Pengguna" },
@@ -273,6 +316,17 @@ export default {
           alert("gagal fetch data");
         });
     },
+
+    searchUser(keyword) {
+        api
+          .get(endpoints.searchUser, { params: { keyword: keyword } })
+          .then((response) => {
+            this.setUsers(response.data);
+          }).catch(error => {
+            console.error(error);
+            alert('pencarian tidak ditemukan')
+          });
+      },
 
     // detail data
     setDetail(data) {

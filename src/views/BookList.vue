@@ -7,6 +7,7 @@
           <p class="mx-2">
             <b-icon-table></b-icon-table><strong> DATA BUKU</strong>
           </p>
+         
           <b-button
             class="rounded-3 gradient-btn mx-2"
             @click="showAddModal = true"
@@ -14,6 +15,28 @@
           >
         </div>
       </div>
+
+      <div class="justify-content-end d-flex">
+        <b-input-group class="mb-2">
+          <b-form-input
+            class="font-nunito mb-2"
+            prepend="cari"
+            style="max-width: 300px"
+            placeholder="Masukkan Kata Kunci"
+            v-model="keyword"
+            @input="searchBooks(keyword)"
+          ></b-form-input>
+          <b-input-group-append>
+            <b-button
+              class="gradient-btn border-0"
+              style="border-bottom-left-radius: 0%; border-top-left-radius: 0%"
+            >
+              <b-icon icon="search" />
+            </b-button>
+          </b-input-group-append>
+        </b-input-group>
+      </div>
+
       <b-table
         class="custom-table"
         :items="books"
@@ -39,9 +62,17 @@
 
         <template #cell(actions)="data">
           <div class="my-1">
-            <b-button
+            <!-- <b-button
               class="m-1 btn-sm outline-primary-custom"
               @click="detailBook(data.item.id)"
+              ><b-icon-eye></b-icon-eye
+            ></b-button> -->
+            <b-button
+              class="m-1 btn-sm outline-primary-custom"
+              :to="{
+                name: 'detail-book',
+                params: { id: data.item.id },
+              }"
               ><b-icon-eye></b-icon-eye
             ></b-button>
             <b-button
@@ -57,6 +88,14 @@
           </div>
         </template>
       </b-table>
+
+      <b-pagination
+        align="fill"
+        v-model="currentPage"
+        :total-rows="books.length"
+        :per-page="perPage"
+        aria-controls="my-table"
+      ></b-pagination>
     </div>
 
     <!-- modal detail -->
@@ -343,6 +382,9 @@ export default {
       selectedBook: null,
       showAddModal: false,
       showEditModal: false,
+      keyword: "",
+      perPage: 5,
+      currentPage: 3,
       newBook: {},
       user_logged: localStorage.getItem('user_id'),
     };
@@ -381,6 +423,17 @@ export default {
           alert("gagal fetch data");
         });
     },
+
+    searchBooks(keyword) {
+        api
+          .get(endpoints.searchBook, { params: { keyword: keyword } })
+          .then((response) => {
+            this.setBooks(response.data);
+          }).catch(error => {
+            console.error(error);
+            alert('pencarian tidak ditemukan')
+          });
+      },
 
     // detail data
     setDetail(data) {

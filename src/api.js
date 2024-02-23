@@ -4,6 +4,8 @@ const ApiUrl = "http://127.0.0.1:8000/api";
 const endpoints = {
   login: `${ApiUrl}/login`,
   register: `${ApiUrl}/register`,
+  searchUser: `${ApiUrl}/search-users`,
+  searchOp: `${ApiUrl}/search-operators`,
   
   profile: `${ApiUrl}/profile`,
   getUser2: `${ApiUrl}/users-peminjam`,
@@ -17,6 +19,7 @@ const endpoints = {
   deleteUser: (id) =>  `${ApiUrl}/users/${id}`,
 
   getBooks: `${ApiUrl}/books`,
+  searchBook: `${ApiUrl}/search-books`,
   getBookById: (id) =>  `${ApiUrl}/books/${id}`,
   addBook: `${ApiUrl}/books`,
   editBook: (id) =>  `${ApiUrl}/books/${id}`,
@@ -31,6 +34,7 @@ const endpoints = {
   deleteCollection: (id) => `${ApiUrl}/collections/${id}`,
 
   getBorrows: `${ApiUrl}/borrowings`,
+  searchBorrow: `${ApiUrl}/search-borrows`,
   getBorrowById: (id) =>  `${ApiUrl}/borrowings/${id}`,
   addBorrow: `${ApiUrl}/borrowings`,
   editBorrow: (id) =>  `${ApiUrl}/borrowings/${id}`,

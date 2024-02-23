@@ -2,7 +2,6 @@
   <div class="">
     <b-navbar
       toggleable="sm"
-      variant="light"
       style="background-color: white; height: 65px"
     >
       <div class="container mt-2">
@@ -133,7 +132,7 @@ export default {
       localStorage.removeItem("user_name");
       localStorage.removeItem("username");
       localStorage.removeItem("roles");
-      localStorage.removeItem("token");
+      localStorage.removeItem("user_role");
       this.$router.push("/");
     },
   },

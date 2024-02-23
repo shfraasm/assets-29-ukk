@@ -66,7 +66,7 @@
           <div class="col">
             <div class="d-flex flex-wrap justify-content-center my-2">
               <div class="v-for-book" v-for="(book, index) in books" :key="index">
-                <div class="bg-light p-3 mx-3 rounded-3 mb-4">
+                <div class="bg-white p-3 mx-3 rounded-3 mb-4">
                   <img
                     :src="book.photo"
                     style="max-width: 170px; max-height: 220px"
@@ -93,7 +93,7 @@
       </div>
     </div>
 
-    <div class="bg-light">
+    <div class="bg-white">
       <div class="container py-5">
         <div class="row py-3">
           <div class="col-md-6">
