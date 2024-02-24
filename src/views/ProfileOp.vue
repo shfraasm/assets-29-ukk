@@ -52,6 +52,16 @@
                     </div>
                     <div class="">
                       <b-button
+                      class="btn-sm button-secondary border-0 mx-2"
+                      :to="{
+                        name: 'profile-edit',
+                        params: {
+                          id: user_logged,
+                        },
+                      }"
+                      ><b-icon-pen></b-icon-pen> Ubah Profil</b-button
+                    >
+                      <b-button
                         class="btn-sm button-danger border-0"
                         @click="showDeleteModal = true"
                         ><b-icon-trash></b-icon-trash> Hapus Akun</b-button
@@ -166,3 +176,13 @@ export default {
   },
 };
 </script>
+<style scoped>
+.footer {
+  position: relative;
+  top: 70px;
+  left: 0;
+  width: 100%;
+  background-color: #ffffff;
+  box-sizing: border-box;
+}
+</style>

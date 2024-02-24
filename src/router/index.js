@@ -103,6 +103,11 @@ const router = new VueRouter({
 		component: () => import("../views/ProfileUser.vue"),
 	  },
 	{
+		path: "/profile/edit/:id",
+		name: "profile-edit",
+		component: () => import("../views/ProfileEdit.vue"),
+	  },
+	{
 		path: "/op-profile",
 		name: "op-profile",
 		component: () => import("../views/ProfileOp.vue"),

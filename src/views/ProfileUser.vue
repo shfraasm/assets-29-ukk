@@ -40,13 +40,22 @@
                     >
                   </div>
                   <div class="">
-                    <div class="">
-                      <b-button
-                        class="btn-sm button-danger border-0"
-                        @click="showDeleteModal = true"
-                        ><b-icon-trash></b-icon-trash> Hapus Akun</b-button
-                      >
-                    </div>
+                    <b-button
+                      class="btn-sm button-secondary border-0 mx-2"
+                      :to="{
+                        name: 'profile-edit',
+                        params: {
+                          id: user_logged,
+                        },
+                      }"
+                      ><b-icon-pen></b-icon-pen> Ubah Profil</b-button
+                    >
+
+                    <b-button
+                      class="btn-sm button-danger border-0"
+                      @click="showDeleteModal = true"
+                      ><b-icon-trash></b-icon-trash> Hapus Akun</b-button
+                    >
                   </div>
                 </div>
               </div>

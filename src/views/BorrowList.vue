@@ -364,7 +364,6 @@
         </div>
       </b-form>
     </b-modal>
-
     <FooterBottom />
   </div>
 </template>
@@ -573,3 +572,13 @@ export default {
   },
 };
 </script>
+<style scoped>
+.footer-bottom {
+  position: relative;
+  top: 70px;
+  left: 0;
+  width: 100%;
+  background-color: #ffffff;
+  box-sizing: border-box;
+}
+</style>

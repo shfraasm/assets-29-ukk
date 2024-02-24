@@ -1,5 +1,5 @@
 <template>
-  <div class="background-tc-2" style="height: fit-content;">
+  <div class="background-tc-2">
     <MainNavbar />
     <div class="my-5">
       <div class="text-center">
@@ -10,7 +10,7 @@
         </p>
       </div>
       <div
-        class="text-center text-secondary align-items-center py-5 v-if-col-0" v-if="collections.length == 0"
+        class="text-center text-secondary align-items-center py-5 v-if-col-0" style="margin-top: 60px !important;" v-if="collections.length == 0"
       >
         <p>
           <b-icon-archive font-scale="5" class="mb-2"></b-icon-archive> <br />
@@ -124,5 +124,13 @@ export default {
 };
 </script>
   
-  <style>
+  <style scoped>
+.footer {
+  position: relative;
+  top: 80px;
+  left: 0;
+  width: 100%;
+  background-color: #ffffff;
+  box-sizing: border-box;
+}
 </style>

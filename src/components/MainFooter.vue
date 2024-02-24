@@ -16,7 +16,7 @@
             <li><a href="/dashboard">Beranda</a></li>
             <li><a href="/booklist">Daftar Buku</a></li>
             <li><a href="/bookmark">Koleksi Saya</a></li>
-            <li><a href="/bookmark">Tentang Kami</a></li>
+            <li><a href="/about">Tentang Kami</a></li>
           </ul>
         </div>
         <div class="col-md-4">

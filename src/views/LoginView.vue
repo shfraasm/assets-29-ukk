@@ -88,7 +88,7 @@ export default {
         })
         .catch((error) => {
           console.error(error);
-          alert("Gagal login, tidak valid");
+          alert("Nama pengguna/Kata sandi tidak valid");
         });
 
     },

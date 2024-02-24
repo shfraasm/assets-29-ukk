@@ -60,15 +60,18 @@
         </div>
       </div>
     </div>
+    <MainFooter/>
   </div>
 </template>
   
   <script>
 import MainNavbar from "../components/MainNavbar.vue";
+import MainFooter from "../components/MainFooter.vue";
 import { endpoints, api } from "../api.js";
 export default {
   components: {
     MainNavbar,
+    MainFooter
   },
   data() {
     return {
